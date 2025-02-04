@@ -150,7 +150,7 @@ const AddEventForm = () => {
     
         try {
             const completion = await openai.chat.completions.create({
-                model: "gpt-4",
+                model: "gpt-4o-mini",
                 messages: [
                     { role: "system", content: "You are a helpful assistant specialized in classical music." },
                     { role: "user", content: `Write a short and engaging program note for the classical music piece "${piece}" by ${composer}.` },
