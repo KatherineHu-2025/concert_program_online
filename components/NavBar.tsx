@@ -40,6 +40,7 @@ const NavBar: FunctionComponent = () => {
             router.push('/signup');
         }
     };
+    
 
     return (
         <div className={styles.navbar}>
