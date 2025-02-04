@@ -135,7 +135,7 @@ const Dashboard = () => {
         }
     
         // Navigate to the update page, including the userId and eventId in the query parameters
-        router.push(`/add-event?id=${event.id}`);
+        router.push(`/add-event/${event.id}`);
     };
 
     if (loading || loadingAuth) {
