@@ -1,0 +1,161 @@
+/* AddEvent.module.css */
+.container {
+    display: flex;
+    height: 100vh; /* Ensure the container takes up the full viewport height */
+}
+
+.editableHeadingInput {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3a3b5a;
+    text-align: center;
+    background: none; /* Make background transparent to match heading style */
+    border: none; /* Remove border for a heading-like appearance */
+    outline: none; /* Remove outline to avoid a focus border */
+    margin-bottom: 1.5rem;
+    width: 100%; /* Full width to center the text */
+}
+
+.formContent {
+    flex-grow: 1; /* Allow form content to take up the remaining space */
+    padding: 40px;
+    background-color: #f7f9fc;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Ensure content is scrollable if necessary */
+}
+
+.backButton {
+    background: none;
+    border: none;
+    color: #4318ff;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    align-self: flex-start; /* Aligns the button to the top left */
+}
+
+.heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3a3b5a;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form input[type="datetime-local"],
+.form input[type="text"],
+.form select,
+.form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+.form textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-size: 1rem;
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.additionalPerformer,
+.program {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.addButton {
+    background-color: #2b3674;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start; /* Aligns the add button to the left */
+    font-size: 0.9rem;
+}
+
+.submitButton {
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #2b3674;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.label {
+    color: #2b3674;
+}
+
+.customSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.customSectionTitleInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+.customSectionContentInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.programNotesContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.programNotesInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.generateNotesButton {
+    background-color: #2b3674;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    align-self: center;
+}
