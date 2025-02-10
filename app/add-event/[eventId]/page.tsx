@@ -149,7 +149,7 @@ const AddEventForm = () => {
         }
     
         try {
-            const response = await fetch("http://127.0.0.1:8000/generate_program_note/", {
+            const response = await fetch("https://concert-program-online-backend.onrender.com/generate_program_note/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
