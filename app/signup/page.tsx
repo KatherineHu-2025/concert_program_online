@@ -3,132 +3,125 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import styles from "../../styles/SignUp.module.css";
+import DecorativeDivider from "@/components/DecorativeDots";
+import { Lora } from "next/font/google";
 
-const LoginOrSignUp = () => {
+const lora = Lora({ subsets: ["latin"], weight: ["400", "700"] });
+
+const SignUpPage = () => {
+    
+
     const router = useRouter();
     const [auth, setAuth] = useState<Auth | null>(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
-    const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null);
-    const [showPasswordInput, setShowPasswordInput] = useState(false);
-
+    // const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null);
+    // const [showPasswordInput, setShowPasswordInput] = useState(false);
+  
     useEffect(() => {
-        import("../../firebaseConfig").then(() => setAuth(getAuth())); // ✅ Now properly typed
+      import("../../firebaseConfig").then(() => setAuth(getAuth() as Auth | null));
     }, []);
-
-    const handleEmailSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!auth) return; // Prevent execution if auth is not initialized
-        setError(null);
-
-        try {
-            const normalizedEmail = email.trim().toLowerCase();
-            const signInMethods = await fetchSignInMethodsForEmail(auth, normalizedEmail);
-
-            if (signInMethods.includes("password")) {
-                setIsExistingUser(true);
-            } else if (signInMethods.includes("google.com")) {
-                setError("This email is registered with Google Sign-In. Please use that method.");
-                setIsExistingUser(null);
-            } else {
-                setIsExistingUser(false);
-            }
-            setShowPasswordInput(true);
-        } catch (err) {
-            console.error("Error fetching sign-in methods:", err);
-            if (err instanceof FirebaseError) {
-                setError(err.message);
-            } else {
-                setError("An unexpected error occurred. Please try again.");
-            }
-        }
-    };
-
+  
+    // const handleEmailSubmit = async (e: React.FormEvent) => {
+    //   e.preventDefault();
+    //   if (!auth) return;
+    //   setError(null);
+  
+    //   try {
+    //     const signInMethods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
+    //     if (signInMethods.includes("password")) {
+    //       setIsExistingUser(true);
+    //     } else if (signInMethods.includes("google.com")) {
+    //       setError("This email is registered with Google Sign-In. Please use that method.");
+    //       setIsExistingUser(null);
+    //     } else {
+    //       setIsExistingUser(false);
+    //     }
+    //     // setShowPasswordInput(true);
+    //   } catch (err) {
+    //     setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
+    //   }
+    // };
+  
     const handlePasswordSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!auth) return;
-        setError(null);
-
-        try {
-            if (isExistingUser) {
-                await signInWithEmailAndPassword(auth, email, password);
-            } else {
-                await createUserWithEmailAndPassword(auth, email, password);
-            }
-            router.push("/");
-        } catch (err) {
-            if (err instanceof FirebaseError) {
-                setError(err.message);
-            } else {
-                setError("An unexpected error occurred");
-            }
-        }
+      e.preventDefault();
+      if (!auth) return;
+      setError(null);
+  
+      try {
+        // if (isExistingUser) {
+        //   await signInWithEmailAndPassword(auth, email, password);
+        // } else {
+        //   await createUserWithEmailAndPassword(auth, email, password);
+        // }
+        await createUserWithEmailAndPassword(auth, email, password);
+        router.push("/");
+      } catch (err) {
+        setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred");
+      }
     };
-
+  
     const handleGoogleSignIn = async () => {
-        if (!auth) return;
-        const provider = new GoogleAuthProvider();
-        try {
-            await signInWithPopup(auth, provider);
-            router.push("/");
-        } catch (err) {
-            if (err instanceof FirebaseError) {
-                setError(err.message);
-            } else {
-                setError("An unexpected error occurred.");
-            }
-        }
+      if (!auth) return;
+      const provider = new GoogleAuthProvider();
+      try {
+        await signInWithPopup(auth, provider);
+        router.push("/");
+      } catch (err) {
+        setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
+      }
     };
-
+  
     return (
-        <div className={styles.container}>
-            <h2 className={styles.heading}>
-                {isExistingUser === null ? "Log In / Sign Up" : isExistingUser ? "Log In" : "Sign Up"}
-            </h2>
-            <form onSubmit={showPasswordInput ? handlePasswordSubmit : handleEmailSubmit} className={styles.form}>
-                <label>Email address</label>
-                <input
-                    type="email"
-                    className={styles.inputField}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="Enter your email"
-                    disabled={showPasswordInput}
-                />
-                {showPasswordInput && (
-                    <>
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            className={styles.inputField}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            placeholder="Enter your password"
-                        />
-                    </>
-                )}
-                {error && <p className={styles.error}>{error}</p>}
-                <button type="submit" className={styles.submitButton}>
-                    {isExistingUser === null ? "Next" : isExistingUser ? "Log In" : "Sign Up"}
-                </button>
-            </form>
-
-            <div className={styles.orContainer}>
-                <span className={styles.orText}>Or</span>
+      <div className={lora.className}> {/* Apply font class here */}
+            <div className={styles.pageContainer}>
+                <div className={styles.leftPanel}>
+                    <div className={styles.brandContainer}>
+                        <h1 className={styles.brand}>Interactive</h1>
+                        <h1 className={styles.brand}>Concert 🎵</h1>
+                        <h1 className={styles.brand}>Program</h1>
+                    </div>
+                    <div className={styles.rightDecorations}>
+                        <div className={styles.rectangle1}></div>
+                        <div className={styles.rectangle2}></div>
+                        <div className={styles.rectangle3}></div>
+                    </div>
+                    <p className={styles.quote}>Music transcends time.</p>
+                </div>
+                <div className={styles.rightPanel}>
+                    <div className={styles.headerContainer}>
+                        <h2 className={styles.heading}>Register Administrative Account!</h2>
+                        <p className={styles.subheading}>For purposes of hosting and editing events, an account is required.</p>
+                    </div>
+                    <DecorativeDivider dotCount={15} musicNotePosition="back" />
+                    <form onSubmit={handlePasswordSubmit} className={styles.form}>
+                        <label>Your username*</label>
+                        <input type="text" className={styles.inputField} required placeholder="Enter your username" />
+                        <label>Email address*</label>
+                        <input type="email" className={styles.inputField} value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Enter your email" />
+                        <label>Create password*</label>
+                        <input type="password" className={styles.inputField} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Enter your password" />
+                        <div className={styles.termsContainer}>
+                            <input type="checkbox" required /> I agree to terms & conditions
+                        </div>
+                        {error && <p className={styles.error}>{error}</p>}
+                        <button type="submit" className={styles.submitButton}>Register Account</button>
+                    </form>
+                    <div className={styles.orContainer}><span className={styles.orText}>or</span></div>
+                    <button onClick={handleGoogleSignIn} className={styles.googleButton} disabled={!auth}>
+                        <Image src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" width={24} height={24} />
+                        Register with Google
+                    </button>
+                </div>
             </div>
-
-            <button onClick={handleGoogleSignIn} className={styles.googleButton} disabled={!auth}>
-                <Image src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" width={24} height={24} />
-                Continue with Google
-            </button>
         </div>
-    );
-};
 
-export default LoginOrSignUp;
+    );
+  };
+  
+  export default SignUpPage;
+  
