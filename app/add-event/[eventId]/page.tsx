@@ -149,26 +149,29 @@ const AddEventForm = () => {
         }
     
         try {
-            const completion = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
-                messages: [
-                    { role: "system", content: "You are a helpful assistant specialized in classical music." },
-                    { role: "user", content: `Write a short and engaging program note for the classical music piece "${piece}" by ${composer}.` },
-                ],
+            const response = await fetch("http://127.0.0.1:8000/generate_program_note/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ piece_name: piece, composer: composer }),
             });
     
-            const generatedNotes = completion.choices[0]?.message?.content?.trim();
-            if (generatedNotes) {
-                const updatedPrograms = [...programs];
-                updatedPrograms[index] = {
-                    ...updatedPrograms[index],
-                    notes: generatedNotes,
-                };
-                setPrograms(updatedPrograms);
+            if (!response.ok) {
+                throw new Error("Failed to fetch program notes");
             }
+    
+            const data = await response.json();
+    
+            const updatedPrograms = [...programs];
+            updatedPrograms[index] = {
+                ...updatedPrograms[index],
+                notes: data.program_note,  // Update with backend response
+            };
+            setPrograms(updatedPrograms);
         } catch (error) {
-            console.error("Error generating program notes:", error);
-            alert("Failed to generate program notes. Please try again.");
+            console.error("Error fetching program notes:", error);
+            alert("Failed to fetch program notes. Please try again.");
         }
     };
 
