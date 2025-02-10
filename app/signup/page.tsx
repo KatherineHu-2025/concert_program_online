@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import styles from "../../styles/SignUp.module.css";
 import DecorativeDivider from "@/components/DecorativeDots";
@@ -19,33 +19,33 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
-    const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null);
+    // const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null);
     // const [showPasswordInput, setShowPasswordInput] = useState(false);
   
     useEffect(() => {
       import("../../firebaseConfig").then(() => setAuth(getAuth() as Auth | null));
     }, []);
   
-    const handleEmailSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!auth) return;
-      setError(null);
+    // const handleEmailSubmit = async (e: React.FormEvent) => {
+    //   e.preventDefault();
+    //   if (!auth) return;
+    //   setError(null);
   
-      try {
-        const signInMethods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
-        if (signInMethods.includes("password")) {
-          setIsExistingUser(true);
-        } else if (signInMethods.includes("google.com")) {
-          setError("This email is registered with Google Sign-In. Please use that method.");
-          setIsExistingUser(null);
-        } else {
-          setIsExistingUser(false);
-        }
-        // setShowPasswordInput(true);
-      } catch (err) {
-        setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
-      }
-    };
+    //   try {
+    //     const signInMethods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
+    //     if (signInMethods.includes("password")) {
+    //       setIsExistingUser(true);
+    //     } else if (signInMethods.includes("google.com")) {
+    //       setError("This email is registered with Google Sign-In. Please use that method.");
+    //       setIsExistingUser(null);
+    //     } else {
+    //       setIsExistingUser(false);
+    //     }
+    //     // setShowPasswordInput(true);
+    //   } catch (err) {
+    //     setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
+    //   }
+    // };
   
     const handlePasswordSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -53,11 +53,12 @@ const SignUpPage = () => {
       setError(null);
   
       try {
-        if (isExistingUser) {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else {
-          await createUserWithEmailAndPassword(auth, email, password);
-        }
+        // if (isExistingUser) {
+        //   await signInWithEmailAndPassword(auth, email, password);
+        // } else {
+        //   await createUserWithEmailAndPassword(auth, email, password);
+        // }
+        await createUserWithEmailAndPassword(auth, email, password);
         router.push("/");
       } catch (err) {
         setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred");

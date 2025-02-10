@@ -8,7 +8,7 @@ import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { auth } from '../../../firebaseConfig';
-import OpenAI from "openai";
+// import OpenAI from "openai";
 
 
 const AddEventForm = () => {
@@ -70,10 +70,10 @@ const AddEventForm = () => {
         fetchEventData();
     }, [eventId]);
 
-    const openai = new OpenAI({
-        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-        dangerouslyAllowBrowser: true, // Make sure to store this key securely
-    });
+    // const openai = new OpenAI({
+    //     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    //     dangerouslyAllowBrowser: true, // Make sure to store this key securely
+    // });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
