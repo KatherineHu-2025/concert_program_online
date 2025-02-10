@@ -31,6 +31,8 @@ const Dashboard = () => {
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [loadingAuth, setLoadingAuth] = useState(true);
+    const [searchUpcoming, setSearchUpcoming] = useState<string>(""); // Search for Upcoming
+    const [searchPast, setSearchPast] = useState<string>(""); // Search for Past
 
     // Fetch events from Firestore in real-time
     useEffect(() => {
@@ -138,6 +140,15 @@ const Dashboard = () => {
         router.push(`/add-event/${event.id}`);
     };
 
+    // Filter events in Upcoming and Past section
+    const filteredUpcoming = upcomingEvents.filter(event =>
+        event.title.toLowerCase().includes(searchUpcoming.toLowerCase())
+    );
+
+    const filteredPast = pastEvents.filter(event =>
+        event.title.toLowerCase().includes(searchPast.toLowerCase())
+    );
+    
     if (loading || loadingAuth) {
         return <div className={styles.loading}>Loading...</div>; // Show a loading spinner or message
     }
@@ -157,8 +168,17 @@ const Dashboard = () => {
                         </button>
                     </div>
 
+                    {/* Search Input for Upcoming Events */}
+                    <input
+                        type="text"
+                        placeholder="Search upcoming events..."
+                        value={searchUpcoming}
+                        onChange={(e) => setSearchUpcoming(e.target.value)}
+                        className={styles.searchInput}
+                    />
+
                     {/* Render each upcoming event card */}
-                    {upcomingEvents.map((event, index) => (
+                    {/* {upcomingEvents.map((event, index) => (
                         <ConcertCard
                             key={event.id}
                             title={event.title}
@@ -167,13 +187,28 @@ const Dashboard = () => {
                             onDelete={() => openDeleteConfirm(index, event.id)}
                             onUpdate={() => handleUpdate(event)}
                         />
-                    ))}
+                    ))} */}
+
+                    {filteredUpcoming.length > 0 ? (
+                        filteredUpcoming.map((event, index) => (
+                            <ConcertCard
+                                key={event.id}
+                                title={event.title}
+                                time={event.date}
+                                location={event.location}
+                                onDelete={() => openDeleteConfirm(index, event.id)}
+                                onUpdate={() => handleUpdate(event)}
+                            />
+                        ))
+                    ) : (
+                        <p className={styles.noResults}>No upcoming events found.</p>
+                    )}
                 </div>
 
                 <div className={styles.past}>
                     <h2 className={styles.sectionTitle}>Past</h2>
                     {/* Render each past event card */}
-                    {pastEvents.map((event, index) => (
+                    {/* {pastEvents.map((event, index) => (
                         <ConcertCard
                             key={event.id}
                             title={event.title}
@@ -182,7 +217,30 @@ const Dashboard = () => {
                             onDelete={() => openDeleteConfirm(index, event.id)}
                             onUpdate={() => handleUpdate(event)}
                         />
-                    ))}
+                    ))} */}
+
+<input
+                        type="text"
+                        placeholder="Search past events..."
+                        value={searchPast}
+                        onChange={(e) => setSearchPast(e.target.value)}
+                        className={styles.searchInput}
+                    />
+
+                    {filteredPast.length > 0 ? (
+                        filteredPast.map((event, index) => (
+                            <ConcertCard
+                                key={event.id}
+                                title={event.title}
+                                time={event.date}
+                                location={event.location}
+                                onDelete={() => openDeleteConfirm(index, event.id)}
+                                onUpdate={() => handleUpdate(event)}
+                            />
+                        ))
+                    ) : (
+                        <p className={styles.noResults}>No past events found.</p>
+                    )}
                 </div>
             </div>
 
