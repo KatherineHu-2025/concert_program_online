@@ -7,6 +7,7 @@ import {
     onSnapshot,
     Timestamp,
     deleteDoc,
+    addDoc,
     doc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
@@ -85,8 +86,34 @@ const Dashboard = () => {
     }, [loadingAuth]);
 
     // Navigate to the add-event form page
-    const openAddEventForm = () => {
-        router.push("/add-event");
+    const openAddEventForm = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+            alert("You need to be logged in to create an event.");
+            return;
+        }
+    
+        try {
+            // Create an empty event in Firestore
+            const eventRef = await addDoc(collection(db, "users", user.uid, "events"), {
+                title: "Input your title here...",
+                date: Timestamp.fromDate(new Date()),
+                location: "",
+                concertType: "",
+                programs: [],
+                performers: [],
+                performanceGroup: null,
+                customSections: [],
+            });
+    
+            console.log("New event created with ID:", eventRef.id);
+    
+            // Redirect to the edit page with the new eventId
+            router.push(`/add-event/${eventRef.id}`);
+        } catch (error) {
+            console.error("Error creating event:", error);
+            alert("Failed to create event. Please try again.");
+        }
     };
 
     // Handle opening the delete confirmation form
@@ -177,18 +204,6 @@ const Dashboard = () => {
                         className={styles.searchInput}
                     />
 
-                    {/* Render each upcoming event card */}
-                    {/* {upcomingEvents.map((event, index) => (
-                        <ConcertCard
-                            key={event.id}
-                            title={event.title}
-                            time={event.date} // Pass Timestamp directly
-                            location={event.location}
-                            onDelete={() => openDeleteConfirm(index, event.id)}
-                            onUpdate={() => handleUpdate(event)}
-                        />
-                    ))} */}
-
                     {filteredUpcoming.length > 0 ? (
                         filteredUpcoming.map((event, index) => (
                             <ConcertCard
@@ -207,19 +222,7 @@ const Dashboard = () => {
 
                 <div className={styles.past}>
                     <h2 className={styles.sectionTitle}>Past</h2>
-                    {/* Render each past event card */}
-                    {/* {pastEvents.map((event, index) => (
-                        <ConcertCard
-                            key={event.id}
-                            title={event.title}
-                            time={event.date} // Pass Timestamp directly
-                            location={event.location}
-                            onDelete={() => openDeleteConfirm(index, event.id)}
-                            onUpdate={() => handleUpdate(event)}
-                        />
-                    ))} */}
-
-<input
+                    <input
                         type="text"
                         placeholder="Search past events..."
                         value={searchPast}
