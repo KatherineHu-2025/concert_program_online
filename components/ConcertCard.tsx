@@ -22,7 +22,7 @@ const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, onDele
             <div className={styles.cardHeader}>
                 <h3 className={styles.title}>{title}</h3>
                 <Image 
-                    src="/delete.svg" 
+                    src="/trash.svg" 
                     alt="Delete" 
                     width={24} 
                     height={24} 

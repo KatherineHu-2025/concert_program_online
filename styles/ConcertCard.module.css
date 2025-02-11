@@ -1,10 +1,21 @@
 /* ConcertCard.module.css */
+/*@font-face {
+    font-family: 'Lora';
+    src: url('/fonts/Lora-Regular.ttf') format('truetype'),
+         url('/fonts/Lora-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}*/
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400&display=swap');
+
+
 
 .concertCard {
-    background-color: #ffffff;
+    background-color: rgba(51, 73, 52, 1);
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -21,9 +32,10 @@
 }
 
 .title {
+    font-family: 'Lora', serif !important;
     font-size: 20px;
     font-weight: 700;
-    color: #2b3674;
+    color: rgba(254, 251, 244, 1);
     line-height: 1.2;
     margin: 0;
 }
@@ -38,7 +50,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    color: #555e90;
+    color: rgba(254, 251, 244, 1);
 }
 
 .infoRow {
@@ -55,7 +67,7 @@
 
 .text {
     font-size: 14px;
-    color: #2b3674;
+    color:  rgba(254, 251, 244, 1);
 }
 
 /* Update button positioned at the bottom-right corner */
@@ -65,8 +77,8 @@
     right: 16px;
     padding: 8px 16px;
     border-radius: 10px;
-    background-color: #3965ff;
-    color: #ffffff;
+    background-color: rgba(222, 221, 237, 1);
+    color: rgba(116, 114, 179, 1);
     font-size: 12px;
     font-weight: 700;
     border: none;
@@ -75,5 +87,7 @@
 }
 
 .updateButton:hover {
-    background-color: #274bb8;
+    background-color: rgba(116, 114, 179, 1);
+    color: rgba(222, 221, 237, 1);
+
 }
