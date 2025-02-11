@@ -58,7 +58,7 @@ const NavBar: FunctionComponent = () => {
                     <Image
                         className={styles.icon}
                         alt="Dashboard Icon"
-                        src={active === 'dashboard' ? '/home_active.svg' : '/home.svg'}
+                        src={active === 'dashboard' ? '/home-active.svg' : '/home.svg'}
                         width={24} 
                         height={24} 
                     />
@@ -72,7 +72,7 @@ const NavBar: FunctionComponent = () => {
                     <Image
                         className={styles.server02Icon}
                         alt="Database Icon"
-                        src={active === 'database' ? '/database_active.svg' : '/database.svg'}
+                        src={active === 'database' ? '/database-active.svg' : '/database.svg'}
                         width={24} 
                         height={24} 
                     />

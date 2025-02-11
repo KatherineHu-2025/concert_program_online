@@ -20,6 +20,7 @@
     flex-direction: column;
     gap: 10px;
     width: 100%; /* Make the card take up full width */
+    height: 30%;
     margin-bottom: 16px; /* Space between cards */
     margin-top: 10px; /* Space between cards */
     position: relative; /* For positioning the Update button */
@@ -43,17 +44,25 @@
 }
 
 .deleteIcon {
-    font-family: 'Lora', serif !important;
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
+    background-image: url('/trash.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
 }
+
+.deleteIcon:hover {
+    background-image: url('/trash-hover.svg'); /* Change the icon on hover */
+}
+
 
 .details {
     font-family: 'Lora', serif !important;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 20px;
     color: rgba(254, 251, 244, 1);
 }
 
@@ -73,7 +82,7 @@
 
 .text {
     font-family: 'Lora', serif !important;
-    font-size: 14px;
+    font-size: 15px;
     color:  rgba(254, 251, 244, 1);
 }
 

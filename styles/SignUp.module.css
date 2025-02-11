@@ -26,11 +26,12 @@
 .brand {
     font-size: 1.5rem;
     font-weight: bold;
-    color: white;
+    color: rgba(254, 251, 244, 1);
     margin: 0;
 }
 
 .quote {
+    color: rgba(254, 251, 244, 1);
     font-size: 1.5rem;
     font-style: italic;
     margin-top: 1rem;
@@ -111,7 +112,7 @@
 .heading {
     font-size: 2rem;
     font-weight: bold;
-    color: #3e3a5a;
+    color: rgba(59, 60, 80, 1);
 }
 
 .form {
@@ -135,7 +136,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: #3e3a5a;
+    color: rgba(59, 60, 80, 1);
 }
 
 .error {
@@ -145,13 +146,22 @@
 }
 
 .submitButton {
+    
+    
+    color: rgba(254, 251, 244, 1);
+    background-color: rgba(242, 195, 179, 1);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.75rem;
     font-size: 1rem;
     font-weight: bold;
-    color: white;
-    background-color: #c79a8b;
-    border: none;
-    border-radius: 5px;
+    
+    /* border: 1px solid #d8cfc4;*/
     cursor: pointer;
 }
 
@@ -164,7 +174,7 @@
 
 .orText {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(59, 60, 80, 1);
 }
 
 .googleButton {
@@ -175,8 +185,8 @@
     font-size: 1rem;
     font-weight: bold;
     color: #3e3a5a;
-    background-color: #fff;
-    border: 1px solid #d8cfc4;
+    background-color: rgba(249, 236, 217, 1);
+    /* border: 1px solid #d8cfc4;*/
     border-radius: 5px;
     cursor: pointer;
 }

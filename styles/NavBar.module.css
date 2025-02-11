@@ -37,9 +37,9 @@
     padding: 10px;
     font-size: 18px;
     cursor: pointer;
-    color: rgba(254, 251, 244, 1);
+    color: rgba(222, 221, 237, 1);
     transition: font-weight 0.2s;
-    font-family: 'Lora';
+    font-family: 'Lora', serif !important;
 }
 
 .dashboardText, .databaseText {
@@ -50,6 +50,7 @@
 .activeButton .dashboardText,
 .activeButton .databaseText {
     font-weight: bold; /* Bold text for the active button */
+    color: rgba(222, 221, 237, 1);
 }
 
 .icon, .server02Icon {
