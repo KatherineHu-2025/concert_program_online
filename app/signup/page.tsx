@@ -19,33 +19,10 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
-    // const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null);
-    // const [showPasswordInput, setShowPasswordInput] = useState(false);
   
     useEffect(() => {
       import("../../firebaseConfig").then(() => setAuth(getAuth() as Auth | null));
     }, []);
-  
-    // const handleEmailSubmit = async (e: React.FormEvent) => {
-    //   e.preventDefault();
-    //   if (!auth) return;
-    //   setError(null);
-  
-    //   try {
-    //     const signInMethods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
-    //     if (signInMethods.includes("password")) {
-    //       setIsExistingUser(true);
-    //     } else if (signInMethods.includes("google.com")) {
-    //       setError("This email is registered with Google Sign-In. Please use that method.");
-    //       setIsExistingUser(null);
-    //     } else {
-    //       setIsExistingUser(false);
-    //     }
-    //     // setShowPasswordInput(true);
-    //   } catch (err) {
-    //     setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
-    //   }
-    // };
   
     const handlePasswordSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -53,11 +30,6 @@ const SignUpPage = () => {
       setError(null);
   
       try {
-        // if (isExistingUser) {
-        //   await signInWithEmailAndPassword(auth, email, password);
-        // } else {
-        //   await createUserWithEmailAndPassword(auth, email, password);
-        // }
         await createUserWithEmailAndPassword(auth, email, password);
         router.push("/");
       } catch (err) {
@@ -75,7 +47,8 @@ const SignUpPage = () => {
         setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
       }
     };
-  
+
+
     return (
       <div className={lora.className}> {/* Apply font class here */}
             <div className={styles.pageContainer}>
@@ -108,6 +81,12 @@ const SignUpPage = () => {
                         <div className={styles.termsContainer}>
                             <input type="checkbox" required /> I agree to terms & conditions
                         </div>
+                        <p className={styles.alreadyUserText}>
+                          I'm already a user.{" "}
+                          <span className={styles.loginLink} onClick={() => router.push("/login")}>
+                              Login here
+                          </span>
+                        </p>
                         {error && <p className={styles.error}>{error}</p>}
                         <button type="submit" className={styles.submitButton}>Register Account</button>
                     </form>

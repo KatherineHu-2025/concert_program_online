@@ -184,3 +184,21 @@
 .googleButton img {
     margin-right: 0.5rem;
 }
+
+.alreadyUserText {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #4a4a4a;
+}
+
+.loginLink {
+    color: #003a80;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.loginLink:hover {
+    color: #002860;
+}
