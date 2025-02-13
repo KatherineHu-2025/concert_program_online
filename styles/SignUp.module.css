@@ -181,12 +181,12 @@
     font-size: 1rem;
     color: rgba(254, 251, 244, 1);
     background-color: rgba(242, 195, 179, 1);
-/*     font-weight: bold;
+/*     font-weight: bold;*/
     /* border: 1px solid #d8cfc4;*/
 /*     color: #FEFBF4;
     background-color: #F2C3B3; */
-    border: none;
-    border-radius: 5px; */
+/*     border: none; */
+/*     border-radius: 5px;  */
 
     cursor: pointer;
 }
@@ -211,11 +211,11 @@
     border: none;
 /*     font-weight: bold;
     color: #3e3a5a;
-    background-color: rgba(249, 236, 217, 1);
+    background-color: rgba(249, 236, 217, 1); */
     /* border: 1px solid #d8cfc4;*/
 /*     color: #3B3C50;
     background-color: #F9ECD9;
-    border: 1px solid #d8cfc4; */ */
+    border: 1px solid #d8cfc4; */
     border-radius: 5px;
     width: 100%;
     cursor: pointer;
