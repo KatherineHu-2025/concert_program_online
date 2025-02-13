@@ -55,7 +55,7 @@ const SignUpPage = () => {
                 <div className={styles.leftPanel}>
                     <div className={styles.brandContainer}>
                         <h1 className={styles.brand}>Interactive</h1>
-                        <h1 className={styles.brand}>Concert</h1>
+                        <h1 className={styles.brand}>Concert ♫</h1>
                         <h1 className={styles.brand}>Program</h1>
                     </div>
                     <p className={styles.quote}>Music transcends time.</p>

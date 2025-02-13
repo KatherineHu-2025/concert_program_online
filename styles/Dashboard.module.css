@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     padding: 30px;
-    background-color: #f5f7fe;
+    background-color: rgba(254, 251, 244, 1);
     height: 100vh;
     box-sizing: border-box;
     width: 100vw;
@@ -15,8 +15,8 @@
     letter-spacing: 0.15px;
     line-height: 33px;
     font-weight: 900;
-    font-family: 'DM Sans';
-    color: #000;
+    font-family: 'Lora';
+    color: rgba(59, 60, 80, 1);
     text-align: left;
     margin-bottom: 15px;
     height: 55px;
@@ -32,13 +32,14 @@
 
 .upcoming, .past {
     flex: 1;
-    background-color: #ffffff;
+    background-color: rgba(249, 236, 217, 1);
+    color: rgba(59, 60, 80, 1);
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);*/
     display: flex;
     flex-direction: column;
-    font-family: 'DM Sans';
+    font-family: 'Lora';
     margin: 20px;
 }
 
@@ -52,27 +53,28 @@
 .sectionTitle {
     font-size: 24px;
     font-weight: 700;
-    color: #2b3674;
+    color: rgba(59, 60, 80, 1);
 }
 
 .addButton {
-    background-color: #f5f7fe;
+    background-color: rgba(242, 195, 179, 1);
     border: none;
     border-radius: 12px;
     width: 80px; /* Adjusted to smaller width */
     height: 30px;
     font-size: 24px;
-    color: #4318ff;
+    color: rgba(254, 251, 244, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);*/
     transition: background-color 0.2s;
 }
 
 .addButton:hover {
-    background-color: #e0e4f1;
+    color: rgba(222, 221, 237, 1);
+    background-color: rgba(116, 114, 179, 1);
 }
 
 .card {
@@ -142,8 +144,8 @@
 }
 
 .cancelButton {
-    background-color: #e0e4f1;
-    color: #555e90;
+    background-color: rgba(222, 221, 237, 1);
+    color: rgba(116, 114, 179, 1);
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -154,20 +156,22 @@
 }
 
 .cancelButton:hover {
-    background-color: #c7cde0;
+    background-color:  rgba(116, 114, 179, 1);
+    color: rgba(222, 221, 237, 1);
 }
 
 /* New Confirm Button for Delete Confirmation */
 .confirmation {
-    background-color: #ffffff;
+    background-color: rgba(254, 251, 244, 1);
+    color: rgba(59, 60, 80, 1); 
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);*/
 }
 
 .confirmButton {
-    background-color: #ff4d4d;
-    color: #ffffff;
+    background-color: rgba(255, 133, 95, 1);
+    color: rgba(254, 251, 244, 1);
     font-weight: 700;
     padding: 8px 16px;
     border: none;
@@ -179,5 +183,5 @@
 }
 
 .confirmButton:hover {
-    background-color: #d93b3b;
+    background-color: rgb(249, 82, 32);
 }
