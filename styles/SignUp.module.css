@@ -4,14 +4,14 @@
 .pageContainer {
     display: flex;
     height: 100vh;
-    font-family: 'Georgia', serif;
+    font-family: 'Lora', serif;
     position: relative;
 }
 
 .leftPanel {
     flex: 1;
     background: url('/background-image.jpg') center/cover no-repeat;
-    color: white;
+    color: rgba(254, 251, 244, 1);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -23,10 +23,26 @@
     
 }
 
+.leftPanel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 25, 47, 0.6); /* Navy blue with 60% opacity */
+    z-index: 1;
+}
+
+.leftPanel * {
+    position: relative;
+    z-index: 1;
+}
+
 .brand {
     font-size: 1.5rem;
     font-weight: bold;
-    color: white;
+    color: rgba(254, 251, 244, 1);
     margin: 0;
 }
 
@@ -35,12 +51,13 @@
     font-style: italic;
     margin-top: 1rem;
     position: relative;
+    color: rgba(254, 251, 244, 1);
 }
 
 .quote::before, .quote::after {
     content: '"';
     font-size: 2rem;
-    color: #f4a261;
+    color: rgba(242, 195, 179, 1);
     position: absolute;
 }
 
@@ -73,6 +90,7 @@
     display: flex;
     flex-direction: row;
 }
+
 
 .rectangle1 {
     background-color: #DEDDED;
@@ -111,7 +129,7 @@
 .heading {
     font-size: 2rem;
     font-weight: bold;
-    color: #3e3a5a;
+    color: rgba(59, 60, 80, 1);
 }
 
 .form {
@@ -135,11 +153,11 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: #3e3a5a;
+    color: rgba(59, 60, 80, 1);
 }
 
 .error {
-    color: red;
+    color: #ff4d4d;
     font-size: 0.9rem;
     margin-top: 0.5rem;
 }
@@ -147,9 +165,8 @@
 .submitButton {
     padding: 0.75rem;
     font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background-color: #c79a8b;
+    color: rgba(254, 251, 244, 1);
+    background-color: rgba(242, 195, 179, 1);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -164,21 +181,23 @@
 
 .orText {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(59, 60, 80, 1);
 }
 
 .googleButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 0.75rem;
     font-size: 1rem;
-    font-weight: bold;
-    color: #3e3a5a;
-    background-color: #fff;
-    border: 1px solid #d8cfc4;
+    color: rgba(59, 60, 80, 1);
+    background-color: rgba(249, 236, 217, 1);
+    border: none;
     border-radius: 5px;
     cursor: pointer;
+    display: flex;
+    padding: 0.75rem 7rem; 
+    /* 
+    align-items: center;
+    justify-content: center;*/
+
 }
 
 .googleButton img {
