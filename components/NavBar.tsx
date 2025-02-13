@@ -46,7 +46,7 @@ const NavBar: FunctionComponent = () => {
         <div className={styles.navbar}>
             <div className={styles.interactiveConcertProgramContainer}>
                 <p className={styles.interactive}>Interactive</p>
-                <p className={styles.interactive}>Concert</p>
+                <p className={styles.interactive}>Concert ♫</p>
                 <p className={styles.interactive}>Program</p>
             </div>
             
@@ -58,7 +58,7 @@ const NavBar: FunctionComponent = () => {
                     <Image
                         className={styles.icon}
                         alt="Dashboard Icon"
-                        src={active === 'dashboard' ? '/home_active.svg' : '/home.svg'}
+                        src={active === 'dashboard' ? '/home-active.svg' : '/home.svg'}
                         width={24} 
                         height={24} 
                     />
@@ -72,7 +72,7 @@ const NavBar: FunctionComponent = () => {
                     <Image
                         className={styles.server02Icon}
                         alt="Database Icon"
-                        src={active === 'database' ? '/database_active.svg' : '/database.svg'}
+                        src={active === 'database' ? '/database-active.svg' : '/database.svg'}
                         width={24} 
                         height={24} 
                     />
@@ -81,7 +81,8 @@ const NavBar: FunctionComponent = () => {
     
                 <div
                     className={styles.activeBar}
-                    style={{ transform: active === 'dashboard' ? 'translateY(0)' : 'translateY(60px)' }}
+                   style={{ transform: active === 'dashboard' ? 'translateY(0)' : 'translateY(60px)' }}
+                    //style = {{transform: `translate(${active === 'dashboard' ? '0, 0' : '0, 60px'}) translateX(-5px)`}}
                 />
             </div>
             
