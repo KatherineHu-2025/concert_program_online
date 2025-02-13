@@ -46,7 +46,7 @@ const NavBar: FunctionComponent = () => {
         <div className={styles.navbar}>
             <div className={styles.interactiveConcertProgramContainer}>
                 <p className={styles.interactive}>Interactive</p>
-                <p className={styles.interactive}>Concert</p>
+                <p className={styles.interactive}>Concert ♫</p>
                 <p className={styles.interactive}>Program</p>
             </div>
             
@@ -81,7 +81,8 @@ const NavBar: FunctionComponent = () => {
     
                 <div
                     className={styles.activeBar}
-                    style={{ transform: active === 'dashboard' ? 'translateY(0)' : 'translateY(60px)' }}
+                   style={{ transform: active === 'dashboard' ? 'translateY(0)' : 'translateY(60px)' }}
+                    //style = {{transform: `translate(${active === 'dashboard' ? '0, 0' : '0, 60px'}) translateX(-5px)`}}
                 />
             </div>
             

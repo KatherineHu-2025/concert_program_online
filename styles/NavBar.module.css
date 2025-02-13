@@ -47,6 +47,7 @@
     font-weight: normal;
 }
 
+
 .activeButton .dashboardText,
 .activeButton .databaseText {
     font-weight: bold; /* Bold text for the active button */
@@ -65,6 +66,7 @@
     right: 0;
     width: 4px;
     height: 36px;
+   /* left: 190px; /* Adjust this value to move it left */
     background-color: rgba(116, 114, 179, 1);
     border-radius: 25px;
     transition: transform 0.3s ease; /* Smooth sliding animation */
@@ -82,6 +84,8 @@
     font-family: 'Lora';
 }
 
+
+
 /* Avatar styling */
 .avatar {
     width: 40px;
@@ -97,6 +101,9 @@
     font-size: 16px;
     color: rgba(254, 251, 244, 1);
     font-family: 'Lora';
+}
+.userName:hover {
+    color:rgba(116, 114, 179, 1);
 }
 
 /* Sign Up text styling for when no user is logged in */
