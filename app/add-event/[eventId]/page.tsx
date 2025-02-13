@@ -114,13 +114,11 @@ const AddEventForm = () => {
                 // Update existing event under the user's collection
                 const eventDocRef = doc(db, 'users', user.uid, 'events', eventId as string);
                 await updateDoc(eventDocRef, eventData);
-                alert("Event successfully updated!");
             } else {
                 // Add new event under the user's collection
                 const userEventsCollectionRef = collection(db, 'users', user.uid, 'events');
                 const docRef = await addDoc(userEventsCollectionRef, eventData);
                 console.log("Document written with ID:", docRef.id); // Debugging
-                alert("Event successfully added!");
             }
     
             // Reset form fields after successful submission

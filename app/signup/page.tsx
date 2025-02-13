@@ -19,33 +19,10 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
-    // const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null);
-    // const [showPasswordInput, setShowPasswordInput] = useState(false);
   
     useEffect(() => {
       import("../../firebaseConfig").then(() => setAuth(getAuth() as Auth | null));
     }, []);
-  
-    // const handleEmailSubmit = async (e: React.FormEvent) => {
-    //   e.preventDefault();
-    //   if (!auth) return;
-    //   setError(null);
-  
-    //   try {
-    //     const signInMethods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
-    //     if (signInMethods.includes("password")) {
-    //       setIsExistingUser(true);
-    //     } else if (signInMethods.includes("google.com")) {
-    //       setError("This email is registered with Google Sign-In. Please use that method.");
-    //       setIsExistingUser(null);
-    //     } else {
-    //       setIsExistingUser(false);
-    //     }
-    //     // setShowPasswordInput(true);
-    //   } catch (err) {
-    //     setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
-    //   }
-    // };
   
     const handlePasswordSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -53,11 +30,6 @@ const SignUpPage = () => {
       setError(null);
   
       try {
-        // if (isExistingUser) {
-        //   await signInWithEmailAndPassword(auth, email, password);
-        // } else {
-        //   await createUserWithEmailAndPassword(auth, email, password);
-        // }
         await createUserWithEmailAndPassword(auth, email, password);
         router.push("/");
       } catch (err) {
@@ -75,39 +47,52 @@ const SignUpPage = () => {
         setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred.");
       }
     };
-  
+
+
     return (
       <div className={lora.className}> {/* Apply font class here */}
             <div className={styles.pageContainer}>
                 <div className={styles.leftPanel}>
                     <div className={styles.brandContainer}>
                         <h1 className={styles.brand}>Interactive</h1>
-                        <h1 className={styles.brand}>Concert 🎵</h1>
+                        <h1 className={styles.brand}>Concert</h1>
                         <h1 className={styles.brand}>Program</h1>
                     </div>
-                    <div className={styles.rightDecorations}>
-                        <div className={styles.rectangle1}></div>
-                        <div className={styles.rectangle2}></div>
-                        <div className={styles.rectangle3}></div>
-                    </div>
                     <p className={styles.quote}>Music transcends time.</p>
+                </div>
+                <div className={styles.rightDecorations}>
+                    <div className={styles.rectangle1}></div>
+                    <div className={styles.rectangle2}></div>
+                    <div className={styles.rectangle3}></div>
                 </div>
                 <div className={styles.rightPanel}>
                     <div className={styles.headerContainer}>
                         <h2 className={styles.heading}>Register Administrative Account!</h2>
                         <p className={styles.subheading}>For purposes of hosting and editing events, an account is required.</p>
                     </div>
-                    <DecorativeDivider dotCount={15} musicNotePosition="back" />
+                    <DecorativeDivider dotCount={20} musicNotePosition="front" />
                     <form onSubmit={handlePasswordSubmit} className={styles.form}>
-                        <label>Your username*</label>
+                        <label>
+                            Your username
+                            <span className={styles.asterisk}>*</span>
+                        </label>
                         <input type="text" className={styles.inputField} required placeholder="Enter your username" />
-                        <label>Email address*</label>
+                        <label>
+                            Email address
+                            <span className={styles.asterisk}>*</span>
+                        </label>
                         <input type="email" className={styles.inputField} value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="Enter your email" />
-                        <label>Create password*</label>
+                        <label>
+                            Create password
+                            <span className={styles.asterisk}>*</span>
+                        </label>
                         <input type="password" className={styles.inputField} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Enter your password" />
                         <div className={styles.termsContainer}>
                             <input type="checkbox" required /> I agree to terms & conditions
                         </div>
+                        <p className={styles.alreadyUserText} onClick={() => router.push("/login")}>
+                            I&apos;m already a user.   
+                        </p>
                         {error && <p className={styles.error}>{error}</p>}
                         <button type="submit" className={styles.submitButton}>Register Account</button>
                     </form>

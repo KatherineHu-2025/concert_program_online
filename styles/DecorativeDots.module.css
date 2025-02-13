@@ -1,18 +1,17 @@
 .divider {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem 0;
-    font-size: 1.2rem;
+    margin: 2rem 0;
+    font-size: 1.5rem;
     color: #DEDDED; /* Light purple shade */
 }
 
 .dots {
-    letter-spacing: 0.3rem;
-    font-size: 1.5rem;
+    letter-spacing: 0.8rem;
+    font-size: 2rem;
 }
 
 .musicNote {
-    margin-left: 0.5rem;
+    margin-right: 0.8rem;
+    margin-left: 0.8rem;
     font-size: 1.5rem;
 }
