@@ -137,8 +137,6 @@ const Dashboard = () => {
                 // Reference the event document under the user's collection
                 const eventDoc = doc(db, "users", user.uid, "events", selectedEventId);
                 await deleteDoc(eventDoc);
-    
-                alert("Event successfully deleted!");
             } catch (error) {
                 console.error("Error deleting document: ", error);
                 alert("Failed to delete event. Please try again.");

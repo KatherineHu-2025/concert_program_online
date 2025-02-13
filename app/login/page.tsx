@@ -48,20 +48,19 @@ const LoginPage = () => {
 
     return (
         <div className={lora.className}>
-            <div className={styles.pageContainer}>
-                {/* Left Panel (Brand + Image) */}
+           <div className={styles.pageContainer}>
                 <div className={styles.leftPanel}>
                     <div className={styles.brandContainer}>
                         <h1 className={styles.brand}>Interactive</h1>
-                        <h1 className={styles.brand}>Concert 🎵</h1>
+                        <h1 className={styles.brand}>Concert</h1>
                         <h1 className={styles.brand}>Program</h1>
                     </div>
-                    <div className={styles.rightDecorations}>
-                        <div className={styles.rectangle1}></div>
-                        <div className={styles.rectangle2}></div>
-                        <div className={styles.rectangle3}></div>
-                    </div>
                     <p className={styles.quote}>Music transcends time.</p>
+                </div>
+                <div className={styles.rightDecorations}>
+                    <div className={styles.rectangle1}></div>
+                    <div className={styles.rectangle2}></div>
+                    <div className={styles.rectangle3}></div>
                 </div>
 
                 {/* Right Panel (Login Form) */}
@@ -74,7 +73,10 @@ const LoginPage = () => {
                     <DecorativeDivider dotCount={15} musicNotePosition="back" />
 
                     <form onSubmit={handleLogin} className={styles.form}>
-                        <label>Email Address*</label>
+                        <label>
+                            Email address
+                            <span className={styles.asterisk}>*</span>
+                        </label>
                         <input 
                             type="email" 
                             className={styles.inputField} 
@@ -84,7 +86,10 @@ const LoginPage = () => {
                             placeholder="Enter your email" 
                         />
                         
-                        <label>Password*</label>
+                        <label>
+                            Password
+                            <span className={styles.asterisk}>*</span>
+                        </label>
                         <input 
                             type="password" 
                             className={styles.inputField} 
@@ -103,7 +108,7 @@ const LoginPage = () => {
                         <button type="submit" className={styles.submitButton}>Login</button>
                     </form>
 
-                    <DecorativeDivider dotCount={15} />
+                    <div className={styles.orContainer}><span className={styles.orText}>or</span></div>
 
                     <button onClick={handleGoogleSignIn} className={styles.googleButton} disabled={!auth}>
                         <Image 
