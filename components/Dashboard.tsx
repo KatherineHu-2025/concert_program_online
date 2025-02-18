@@ -88,6 +88,7 @@ const Dashboard = () => {
     // Navigate to the add-event form page
     const openAddEventForm = async () => {
         const user = auth.currentUser;
+        
         if (!user) {
             alert("You need to be logged in to create an event.");
             return;
@@ -114,6 +115,18 @@ const Dashboard = () => {
             console.error("Error creating event:", error);
             alert("Failed to create event. Please try again.");
         }
+    };
+
+    const openAccountPage = async () => {
+        const user = auth.currentUser;
+    
+        if (!user) {
+            alert("You need to be logged in to create an event.");
+            return;
+        }
+    
+        // Redirect to the account page
+        window.location.href = "/account"; // Change "/account" to your desired page
     };
 
     // Handle opening the delete confirmation form
@@ -181,6 +194,15 @@ const Dashboard = () => {
     return (
         <div className={styles.background}>
             <h1 className={styles.dashboard}>Dashboard</h1>
+    
+            {/* Button to Navigate to the Account Page */}
+            <button 
+                className={styles.accountButton} 
+                onClick={openAccountPage}
+            >
+                Go to Account Page
+            </button>
+    
             <div className={styles.section}>
                 <div className={styles.upcoming}>
                     <div className={styles.sectionHeader}>
@@ -192,7 +214,7 @@ const Dashboard = () => {
                             +
                         </button>
                     </div>
-
+    
                     {/* Search Input for Upcoming Events */}
                     <input
                         type="text"
@@ -201,7 +223,7 @@ const Dashboard = () => {
                         onChange={(e) => setSearchUpcoming(e.target.value)}
                         className={styles.searchInput}
                     />
-
+    
                     {filteredUpcoming.length > 0 ? (
                         filteredUpcoming.map((event, index) => (
                             <ConcertCard
@@ -217,7 +239,7 @@ const Dashboard = () => {
                         <p className={styles.noResults}>No upcoming events found.</p>
                     )}
                 </div>
-
+    
                 <div className={styles.past}>
                     <h2 className={styles.sectionTitle}>Past</h2>
                     <input
@@ -227,7 +249,7 @@ const Dashboard = () => {
                         onChange={(e) => setSearchPast(e.target.value)}
                         className={styles.searchInput}
                     />
-
+    
                     {filteredPast.length > 0 ? (
                         filteredPast.map((event, index) => (
                             <ConcertCard
@@ -244,7 +266,7 @@ const Dashboard = () => {
                     )}
                 </div>
             </div>
-
+    
             {/* Delete Confirmation Modal */}
             {isDeleteConfirmOpen && (
                 <div className={styles.modal}>
@@ -267,6 +289,6 @@ const Dashboard = () => {
             )}
         </div>
     );
-};
+}
 
 export default Dashboard;
