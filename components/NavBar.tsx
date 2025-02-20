@@ -28,6 +28,8 @@ const NavBar: FunctionComponent = () => {
         setActive('database');
     }, []);
 
+
+
     const handleSignUpOrAvatarClick = () => {
         if (user) {
             // Optional: handle sign-out or navigate to profile page

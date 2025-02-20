@@ -1,7 +1,7 @@
 /* NavBar.module.css */
 
 .navbar {
-    width: 250px;
+    width: 215px;
     height: 100vh;
     background-color: rgba(59, 60, 80, 1);
     display: flex;
@@ -10,7 +10,15 @@
     padding-top: 20px;
     padding-left: 20px;
     font-family: 'Lora';
+    position: fixed; 
+    left: 0;
+    top: 0;
 }
+
+
+
+
+
 
 .interactiveConcertProgramContainer {
     width: 100%;
