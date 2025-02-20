@@ -148,12 +148,22 @@ import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import styles from "../../styles/Account.module.css"; 
 import NavBar from "../../components/NavBar";
 
+import { collection, query, where, getDocs, Timestamp } from "firebase/firestore";
+import { db } from "../../firebaseConfig"; // Ensure this is your Firestore database reference
+import ConcertCard from "../../components/ConcertCard"; 
+import { doc, deleteDoc } from "firebase/firestore";
+
+
+
+
 const AccountInformation = () => {
     const router = useRouter();
     const auth = getAuth();
     
     // State to hold user data
     const [user, setUser] = useState<User | null>(null);
+    const [events, setEvents] = useState<any[]>([]); // Store user events
+
 
     // Fetch user data on component mount
     useEffect(() => {
@@ -162,6 +172,32 @@ const AccountInformation = () => {
         });
         return () => unsubscribe();
     }, [auth]);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            if (!user) return; // Make sure the user is logged in
+    
+            const eventsRef = collection(db, "events"); // Adjust collection name if necessary
+            const q = query(eventsRef, where("userId", "==", user.uid)); // Query only user's events
+    
+            try {
+                const querySnapshot = await getDocs(q);
+                const userEvents = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    title: doc.data().title,
+                    time: doc.data().time, // Assuming Firestore stores it as Timestamp
+                    location: doc.data().location
+                }));
+    
+                setEvents(userEvents);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
+    
+        fetchEvents();
+    }, [user]);
+    
 
     // Handle navigation
     const goBackDash = () => {
@@ -174,6 +210,20 @@ const AccountInformation = () => {
 
         const newPFP = () => {
         
+    };
+
+    const handleDeleteEvent = async (eventId: string) => {
+        try {
+            await deleteDoc(doc(db, "events", eventId));
+            setEvents(events.filter(event => event.id !== eventId)); // Remove from state
+        } catch (error) {
+            console.error("Error deleting event:", error);
+        }
+    };
+
+    const handleUpdateEvent = (eventId: string) => {
+        console.log("Update event:", eventId);
+        // Implement event update logic (e.g., open a modal with a form)
     };
 
     return (
@@ -255,9 +305,29 @@ const AccountInformation = () => {
             </div>
 
             {/* Your Events Section */}
+            {/* <div className={styles.eventBackground}>
+                <div className={styles.events}>
+                    <b className={styles.yourEvents}>Your Events</b>
+                </div>
+            </div> */}
             <div className={styles.eventBackground}>
                 <div className={styles.events}>
                     <b className={styles.yourEvents}>Your Events</b>
+
+                    {events.length > 0 ? (
+                        events.map((event) => (
+                            <ConcertCard 
+                                key={event.id}
+                                title={event.title} 
+                                time={event.time} 
+                                location={event.location} 
+                                onDelete={() => handleDeleteEvent(event.id)}
+                                onUpdate={() => handleUpdateEvent(event.id)}
+                            />
+                        ))
+                    ) : (
+                        <p>No events found.</p>
+                    )}
                 </div>
             </div>
 
