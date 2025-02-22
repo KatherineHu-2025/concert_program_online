@@ -33,14 +33,34 @@
 .upcoming, .past {
     flex: 1;
     background-color: rgba(249, 236, 217, 1);
-    color: rgba(59, 60, 80, 1);
-    padding: 30px;
+    padding-inline: 30px; /* Only apply padding on left and right */
+    padding-bottom: 30px; /* Keep padding at the bottom */
     border-radius: 12px;
-    /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);*/
     display: flex;
     flex-direction: column;
     font-family: 'Lora';
     margin: 20px;
+    max-height: 80vh; /* Set max height to prevent overflow */
+    min-height: 250px;
+    overflow-y: auto; /* Enables vertical scrolling */
+    scrollbar-width: thin; /* Makes scrollbar less intrusive */
+    scrollbar-color: rgba(116, 114, 179, 0.5) rgba(249, 236, 217, 1);
+}
+
+.upcoming::-webkit-scrollbar, 
+.past::-webkit-scrollbar {
+    width: 8px;
+}
+
+.upcoming::-webkit-scrollbar-thumb, 
+.past::-webkit-scrollbar-thumb {
+    background-color: rgba(116, 114, 179, 0.5);
+    border-radius: 4px;
+}
+
+.upcoming::-webkit-scrollbar-track, 
+.past::-webkit-scrollbar-track {
+    background-color: rgba(249, 236, 217, 1);
 }
 
 .sectionHeader {
@@ -48,12 +68,49 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    width: 100%;
+    background-color: rgba(249, 236, 217, 1);
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%; /* Ensure it spans the full section */
+    padding-inline: 15px; 
+    padding-top: 35px; 
+    padding-bottom: 15px; 
+    z-index: 10;
 }
 
 .sectionTitle {
     font-size: 24px;
     font-weight: 700;
     color: rgba(59, 60, 80, 1);
+}
+
+.searchAddContainer {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between search and add button */
+}
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    background-color: rgba(242, 195, 179, 1);
+    color: #FEFBF4;
+    border-radius: 20px;
+    padding: 4px 8px;
+    width: 156px; /* Adjust width as needed */
+}
+
+.searchInput {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Lora';
+    background-color: rgba(242, 195, 179, 1);
+    color: #FEFBF4;
+    width: 120px; /* Adjust width as needed */
+    outline: none;
 }
 
 .addButton {
@@ -97,6 +154,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 .form {

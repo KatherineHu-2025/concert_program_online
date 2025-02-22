@@ -4,25 +4,52 @@
     height: 100vh; /* Ensure the container takes up the full viewport height */
 }
 
+.backButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+/* Title and Upload Row */
+.titleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.imageUpload {
+    display: flex;
+    align-items: center;
+}
+
 .editableHeadingInput {
     font-size: 1.5rem;
     font-weight: bold;
     color: #3a3b5a;
-    text-align: center;
     background: none; /* Make background transparent to match heading style */
     border: none; /* Remove border for a heading-like appearance */
     outline: none; /* Remove outline to avoid a focus border */
     margin-bottom: 1.5rem;
-    width: 100%; /* Full width to center the text */
+    width: 60%; /* Full width to center the text */
 }
 
 .formContent {
+    flex: 7;
     flex-grow: 1; /* Allow form content to take up the remaining space */
     padding: 40px;
     background-color: #f7f9fc;
     display: flex;
     flex-direction: column;
     overflow-y: auto; /* Ensure content is scrollable if necessary */
+}
+
+.preview {
+    flex: 3;
 }
 
 .backButton {
@@ -40,7 +67,6 @@
     font-weight: bold;
     color: #3a3b5a;
     margin-bottom: 1.5rem;
-    text-align: center;
 }
 
 .form {
@@ -107,6 +133,11 @@
     color: #2b3674;
 }
 
+.asterisk {
+    color: #FF855F;
+}
+
+
 .customSection {
     display: flex;
     flex-direction: column;
@@ -158,4 +189,46 @@
     cursor: pointer;
     font-size: 0.9rem;
     align-self: center;
+}
+
+/* Image Upload Section */
+.imageUpload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+/* File Input (Hidden) */
+
+
+/* Upload Button */
+.uploadButton {
+    background-color: #E6D4F5;
+    color: #4A306D;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Image Preview */
+.imagePreview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Placeholder for No Image */
+.imagePlaceholder {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #999;
 }

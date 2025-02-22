@@ -8,14 +8,14 @@ import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { auth } from '../../../firebaseConfig';
+import Image from "next/image"
 // import OpenAI from "openai";
 
 
 const AddEventForm = () => {
     const router = useRouter();
     const { eventId } = useParams();
-    console.log(eventId);
-    
+
     const [programs, setPrograms] = useState([{ composer: '', piece: '', notes: '' }]);
     const [performers, setPerformer] = useState([{ name: '', role: '' }]);
     const [heading, setHeading] = useState("Input your title here...");
@@ -49,7 +49,7 @@ const AddEventForm = () => {
     
                         // Set the state values based on the retrieved data
                         setHeading(data.title || "Input your title here...");
-                        setEventDate(data.date.toDate().toISOString().slice(0, 16)); // Convert Firestore Timestamp to datetime-local format
+                        setEventDate(data.date.toDate().toLocaleString('sv-SE').slice(0, 16));
                         setLocation(data.location || "");
                         setConcertType(data.concertType || "");
                         setPrograms(data.programs || [{ composer: "", piece: "", notes: "" }]);
@@ -69,11 +69,6 @@ const AddEventForm = () => {
     
         fetchEventData();
     }, [eventId]);
-
-    // const openai = new OpenAI({
-    //     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-    //     dangerouslyAllowBrowser: true, // Make sure to store this key securely
-    // });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -233,23 +228,30 @@ const AddEventForm = () => {
         <div className={styles.container}>
             <NavBar />
             <div className={styles.formContent}>
-                <button onClick={() => window.history.back()} className={styles.backButton}>← Back</button>
-                {/* Editable heading */}
-                {isEditingHeading ? (
-                    <input
-                        type="text"
-                        value={heading}
-                        onChange={handleHeadingChange}
-                        onBlur={handleHeadingBlurOrEnter}
-                        onKeyDown={handleHeadingBlurOrEnter}
-                        autoFocus
-                        className={styles.editableHeadingInput}
-                    />
-                ) : (
-                    <h2 className={styles.heading} onClick={toggleEditHeading}>{heading}</h2>
-                )}
+                <button onClick={() => window.history.back()} className={styles.backButton}>
+                    <Image src="/arrow-left.svg" alt="Back" width={20} height={20} className={styles.icon} />
+                </button>
+                
+                <div className={styles.titleRow}>
+                    {isEditingHeading ? (
+                        <input
+                            type="text"
+                            value={heading}
+                            onChange={handleHeadingChange}
+                            onBlur={handleHeadingBlurOrEnter}
+                            onKeyDown={handleHeadingBlurOrEnter}
+                            autoFocus
+                            className={styles.editableHeadingInput}
+                        />
+                    ) : (
+                        <h2 className={styles.heading} onClick={toggleEditHeading}>{heading}</h2>
+                    )}
+                </div>
+                
                 <form className={styles.form} onSubmit={handleSubmit}>
-                    <label>Time *</label>
+                    <label>Time
+                        <span className={styles.asterisk}>*</span>
+                    </label>
                     <input
                         type="datetime-local"
                         name="time"
@@ -258,7 +260,9 @@ const AddEventForm = () => {
                         required
                     />
 
-                    <label>Location *</label>
+                    <label>Location 
+                        <span className={styles.asterisk}>*</span>
+                    </label>
                     <input
                         type="text"
                         name="location"
@@ -268,7 +272,9 @@ const AddEventForm = () => {
                         required
                     />
 
-                    <label>Concert Type *</label>
+                    <label>Concert Type 
+                        <span className={styles.asterisk}>*</span>
+                    </label>
                     <select
                         name="concertType"
                         value={concertType}
@@ -385,6 +391,7 @@ const AddEventForm = () => {
                     <button type="submit" className={styles.submitButton}>{eventId ? "Update Event" : "Add Event"}</button>
                 </form>
             </div>
+            {/* <div className={styles.preview}></div> */}
         </div>
     );
 };

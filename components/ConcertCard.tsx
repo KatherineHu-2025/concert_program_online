@@ -5,50 +5,64 @@ import Image from "next/image";
 
 interface ConcertCardProps {
     title: string;
-    time: Timestamp;  // Use only Timestamp
+    time: Timestamp;
     location: string;
+    avatarUrl: string; // Add avatar URL as a prop
     onDelete: () => void;
     onUpdate: () => void;
 }
 
-const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, onDelete, onUpdate }) => {
-    // Convert `time` to Date and format it
+const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, avatarUrl, onDelete, onUpdate }) => {
     const dateObj = time.toDate();
-    const date = dateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
-    const formattedTime = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const formattedDate = dateObj.toLocaleDateString(undefined, { 
+        month: '2-digit', 
+        day: '2-digit', 
+        year: 'numeric' 
+    });
+    const formattedTime = dateObj.toLocaleTimeString(undefined, { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+    });
+    const now = new Date();
+    const isPast = dateObj < now;
+
 
     return (
-        <div className={styles.concertCard}>
-            <div className={styles.cardHeader}>
+        <div className={`${styles.concertCard} ${isPast ? styles.pastEvent : styles.upcomingEvent}`}>
+            <div className={styles.cardContent}>
                 <h3 className={styles.title}>{title}</h3>
+                <div className={styles.infoContainer}>
+                    <div className={styles.detailsContainer}>
+                        <div className={styles.infoRow}>
+                            <Image src="/calendar.svg" alt="Calendar" width={20} height={20} className={styles.icon} />
+                            <span className={styles.text}>{formattedDate} {formattedTime}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <Image src="/location.svg" alt="Location" width={20} height={20} className={styles.icon} />
+                            <span className={styles.text}>{location}</span>
+                        </div>
+                    </div>
+
+                    <div className={styles.avatarContainer}>
+                        <Image 
+                            src={avatarUrl} 
+                            alt="Concert Avatar" 
+                            width={75} 
+                            height={75} 
+                            className={styles.avatar} 
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Action Buttons (Trash Can & Update) */}
+            <div className={styles.actionContainer}>
                 <div className={styles.deleteIcon} onClick={onDelete}></div>
+                <button className={styles.updateButton} onClick={onUpdate}>UPDATE</button>
             </div>
-            <div className={styles.details}>
-                <div className={styles.infoRow}>
-                    <Image 
-                        src="/calendar.svg" 
-                        alt="Calendar" 
-                        width={24} 
-                        height={24} 
-                        className={styles.icon} 
-                    />
-                    <span className={styles.text}>{date} {formattedTime}</span>
-                </div>
-                <div className={styles.infoRow}>
-                    <Image 
-                        src="/location.svg" 
-                        alt="Location" 
-                        width={24} 
-                        height={24} 
-                        className={styles.icon} 
-                    />
-                    <span className={styles.text}>{location}</span>
-                </div>
-            </div>
-            <button className={styles.updateButton} onClick={onUpdate}>UPDATE</button> {/* Update button with onUpdate prop */}
         </div>
     );
 };
 
 export default ConcertCard;
-
