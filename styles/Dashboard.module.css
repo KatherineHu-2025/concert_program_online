@@ -63,6 +63,10 @@
     background-color: rgba(249, 236, 217, 1);
 }
 
+.searchInput::placeholder {
+    color:rgba(254, 251, 244, 1);
+}
+
 .sectionHeader {
     display: flex;
     justify-content: space-between;

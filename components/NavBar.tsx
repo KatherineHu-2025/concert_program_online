@@ -22,6 +22,7 @@ const NavBar: FunctionComponent = () => {
 
     const handleDashboardClick = useCallback(() => {
         setActive('dashboard');
+        router.push('/');
     }, []);
 
     const handleDatabaseClick = useCallback(() => {

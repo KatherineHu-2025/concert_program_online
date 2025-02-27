@@ -9,7 +9,7 @@ import { Timestamp } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { auth } from '../../../firebaseConfig';
 import Image from "next/image"
-// import OpenAI from "openai";
+import ColorCircle from '@/components/ColorCircle';
 
 
 const AddEventForm = () => {
@@ -90,16 +90,29 @@ const AddEventForm = () => {
             alert("Please provide a valid date and time.");
             return;
         }
+
+        // **Clean Up Unused Data Before Submission**
+        const filteredPrograms = programs.filter(
+            (p) => p.composer.trim() || p.piece.trim() || p.notes.trim()
+        );
+
+        const filteredPerformers = performers.filter(
+            (p) => p.name.trim() || p.role.trim()
+        );
+
+        const filteredCustomSections = customSections.filter(
+            (s) => s.title.trim() || s.content.trim()
+        );
     
         const eventData = {
             title: heading,
             date: Timestamp.fromDate(new Date(eventDate)),
             location,
             concertType,
-            programs,
-            performers,
+            programs: filteredPrograms,
+            performers: filteredPerformers,
             performanceGroup: isPerformanceGroup ? performanceGroupName : null,
-            customSections,
+            customSections: filteredCustomSections,
         };
     
         console.log("Submitting Event Data:", eventData); // Debugging
@@ -229,9 +242,9 @@ const AddEventForm = () => {
             <NavBar />
             <div className={styles.formContent}>
                 <button onClick={() => window.history.back()} className={styles.backButton}>
-                    <Image src="/arrow-left.svg" alt="Back" width={20} height={20} className={styles.icon} />
+                    <Image src="/arrow-left.svg" alt="Back" width={24} height={24} className={styles.icon} />
                 </button>
-                
+                <p className={styles.path}>Dashboard / New Event</p>
                 <div className={styles.titleRow}>
                     {isEditingHeading ? (
                         <input
@@ -246,9 +259,12 @@ const AddEventForm = () => {
                     ) : (
                         <h2 className={styles.heading} onClick={toggleEditHeading}>{heading}</h2>
                     )}
+                    <span className={styles.asterisk}>*</span>
                 </div>
                 
                 <form className={styles.form} onSubmit={handleSubmit}>
+                    <div className={styles.secondHeader}>Basic Information</div>
+
                     <label>Time
                         <span className={styles.asterisk}>*</span>
                     </label>
@@ -275,19 +291,22 @@ const AddEventForm = () => {
                     <label>Concert Type 
                         <span className={styles.asterisk}>*</span>
                     </label>
-                    <select
-                        name="concertType"
-                        value={concertType}
-                        onChange={(e) => setConcertType(e.target.value)}
-                        required
-                    >
-                        <option value="">Select item</option>
-                        <option value="Recital">Recital</option>
-                        <option value="Symphony">Symphony</option>
-                        <option value="Chamber">Chamber</option>
-                    </select>
+                    <div className={styles.colorWrappers}>
+                        <select
+                            name="concertType"
+                            value={concertType}
+                            onChange={(e) => setConcertType(e.target.value)}
+                            required
+                        >
+                            <option value="">Select item</option>
+                            <option value="Recital">Recital</option>
+                            <option value="Symphony">Symphony</option>
+                            <option value="Chamber">Chamber</option>
+                        </select>
+                        <ColorCircle eventId={eventId as string}></ColorCircle>
+                    </div>
 
-                    <label>Performer(s) *</label>
+                    <div className={styles.secondHeader}>Performer(s) and Conductor(s)</div>
                     <div className={styles.checkboxGroup}>
                         <input
                             type="checkbox"
@@ -310,65 +329,101 @@ const AddEventForm = () => {
                         />
                     )}
 
-                    <label>Individual Performer</label>
+                    <div className={styles.titleWithLabel}>
+                        <label>Additional Performer</label>
+                        <Image 
+                            src="/plus-circle.svg" 
+                            alt="Add Performer" 
+                            width={20} 
+                            height={20} 
+                            className={styles.plusIcon} 
+                            onClick={handleAddPerformer}
+                        />
+                    </div>
+
+                    
                     {performers.map((performer, index) => (
                         <div key={index} className={styles.additionalPerformer}>
                             <input
                                 type="text"
                                 name="name"
-                                placeholder={`Name ${index + 1}`}
+                                placeholder={`Performer Name`}
                                 value={performer.name}
                                 onChange={(e) => handlePerformerChange(index, e)}
                             />
                             <input
                                 type="text"
                                 name="role"
-                                placeholder={`Role ${index + 1}`}
+                                placeholder={`Performer Role`}
                                 value={performer.role}
                                 onChange={(e) => handlePerformerChange(index, e)}
                             />
                         </div>
                     ))}
-                    <button type="button" className={styles.addButton} onClick={handleAddPerformer}>Add Performer</button>
-
-                    <label>Program</label>
+                    
+                    <div className={styles.titleWithLabel}>
+                        <div className={styles.secondHeader}>Program</div>
+                        <Image 
+                            src="/plus-circle.svg" 
+                            alt="Add Piece" 
+                            width={20} 
+                            height={20} 
+                            className={styles.plusIcon} 
+                            onClick={handleAddProgram}
+                        />
+                    </div>
+                    
                     {programs.map((program, index) => (
                         <div key={index} className={styles.program}>
-                            <input
-                                type="text"
-                                name="composer"
-                                placeholder={`Composer ${index + 1}`}
-                                value={program.composer}
-                                onChange={(e) => handleProgramChange(index, e)}
-                            />
-                            <input
-                                type="text"
-                                name="piece"
-                                placeholder={`Piece ${index + 1}`}
-                                value={program.piece}
-                                onChange={(e) => handleProgramChange(index, e)}
-                            />
+                            <div className = {styles.composerAndPiece}>
+                                <div className = {styles.inputGroup}>
+                                    <label>Composer</label>
+                                    <input
+                                        type="text"
+                                        name="composer"
+                                        placeholder={`Composer Name`}
+                                        value={program.composer}
+                                        onChange={(e) => handleProgramChange(index, e)}
+                                    />
+                                </div>
+                                <div className = {styles.inputGroup}>
+                                    <label>Piece</label>
+                                    <input
+                                        type="text"
+                                        name="piece"
+                                        placeholder={`Piece Name`}
+                                        value={program.piece}
+                                        className={styles.piece} 
+                                        onChange={(e) => handleProgramChange(index, e)}
+                                    />
+                                </div>
+                            </div>
+                            
+                            
+                            
                             <div className={styles.programNotesContainer}>
-                                <textarea
-                                    name="notes"
-                                    placeholder={`Program Notes ${index + 1}`}
-                                    value={program.notes}
-                                    onChange={(e) => handleProgramChange(index, e)}
-                                    className={styles.programNotesInput}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => handleGenerateNotes(index)}
-                                    className={styles.generateNotesButton}
-                                >
-                                    Generate Notes
-                                </button>
+                                <label>Program Notes</label>
+                                <div className = {styles.programNotesWrapper}>
+                                    <textarea
+                                        name="notes"
+                                        placeholder={`Write your own program notes or generate using AI! Please remember to check the validity of AI.`}
+                                        value={program.notes}
+                                        onChange={(e) => handleProgramChange(index, e)}
+                                        className={styles.programNotesInput}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleGenerateNotes(index)}
+                                        className={styles.generateNotesButton}
+                                    >
+                                        <Image src="/AI.svg" alt="Generate Notes" width={24} height={24} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
-                    <button type="button" className={styles.addButton} onClick={handleAddProgram}>Add Piece</button>
 
-                    <label>Custom Sections</label>
+                    <div className={styles.secondHeader}>Custom Sections</div>
                     {customSections.map((section, index) => (
                         <div key={index} className={styles.customSection}>
                             <input
@@ -391,7 +446,6 @@ const AddEventForm = () => {
                     <button type="submit" className={styles.submitButton}>{eventId ? "Update Event" : "Add Event"}</button>
                 </form>
             </div>
-            {/* <div className={styles.preview}></div> */}
         </div>
     );
 };

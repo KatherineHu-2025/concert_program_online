@@ -22,6 +22,7 @@ interface EventData {
     title: string;
     date: Timestamp; // Use Timestamp consistently
     location: string;
+    color: string;
 }
 
 const Dashboard = () => {
@@ -101,6 +102,7 @@ const Dashboard = () => {
                 date: Timestamp.fromDate(new Date()),
                 location: "",
                 concertType: "",
+                color:"#FFFFFF",
                 programs: [],
                 performers: [],
                 performanceGroup: null,
@@ -214,6 +216,7 @@ const Dashboard = () => {
                                     time={event.date}
                                     location={event.location}
                                     avatarUrl="/concert-avatar.png"
+                                    
                                     onDelete={() => openDeleteConfirm(index, event.id)}
                                     onUpdate={() => handleUpdate(event)}
                                 />

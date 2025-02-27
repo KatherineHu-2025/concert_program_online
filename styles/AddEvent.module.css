@@ -2,6 +2,13 @@
 .container {
     display: flex;
     height: 100vh; /* Ensure the container takes up the full viewport height */
+    font-family: 'Lora', serif;
+}
+
+.path {
+    color: #DEDDED;
+    font-size: 15px;
+    margin-bottom: 10px;
 }
 
 .backButton {
@@ -22,15 +29,12 @@
     margin-bottom: 20px;
 }
 
-.imageUpload {
-    display: flex;
-    align-items: center;
-}
 
 .editableHeadingInput {
-    font-size: 1.5rem;
+    font-size: 30px;
     font-weight: bold;
-    color: #3a3b5a;
+    font-style: italic;
+    color: #DEDDED;
     background: none; /* Make background transparent to match heading style */
     border: none; /* Remove border for a heading-like appearance */
     outline: none; /* Remove outline to avoid a focus border */
@@ -42,15 +46,12 @@
     flex: 7;
     flex-grow: 1; /* Allow form content to take up the remaining space */
     padding: 40px;
-    background-color: #f7f9fc;
+    background-color: #7472B3;
     display: flex;
     flex-direction: column;
     overflow-y: auto; /* Ensure content is scrollable if necessary */
 }
 
-.preview {
-    flex: 3;
-}
 
 .backButton {
     background: none;
@@ -63,9 +64,10 @@
 }
 
 .heading {
-    font-size: 1.5rem;
+    font-size: 30px;
     font-weight: bold;
-    color: #3a3b5a;
+    color: #DEDDED;
+    font-style: italic;
     margin-bottom: 1.5rem;
 }
 
@@ -83,7 +85,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-    background-color: #ffffff;
+    background-color: #DEDDED;
 }
 
 .form textarea {
@@ -98,7 +100,46 @@
     gap: 0.5rem;
 }
 
-.additionalPerformer,
+.additionalPerformer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap:3rem;
+}
+
+.additionalPerformer input{
+    flex: 1;
+}
+
+.titleWithLabel{
+    display: flex;
+    justify-content: space-between;
+}
+
+.plusIcon{
+    cursor: pointer;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.inputGroup:first-child {
+    flex: 0.4;
+}
+
+.inputGroup:last-child{
+    flex:0.6;
+}
+.composerAndPiece {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+}
+
 .program {
     display: flex;
     flex-direction: column;
@@ -106,9 +147,19 @@
     margin-bottom: 1rem;
 }
 
+.colorWrappers{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.colorWrappers select{
+    flex: 0.5;
+}
+
 .addButton {
-    background-color: #2b3674;
-    color: white;
+    background-color: #DEDDED;
+    color: #7472B3;
     border: none;
     padding: 8px 16px;
     border-radius: 5px;
@@ -121,20 +172,22 @@
     padding: 10px;
     font-size: 1rem;
     font-weight: bold;
-    color: white;
-    background-color: #2b3674;
+    color: rgb(59,60,80,1);
+    background-color: rgb(224,239,216,1);
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 1rem;
 }
 
-.label {
-    color: #2b3674;
+.form label {
+    color: #DEDDED;
+    font-size: 15px;
 }
 
 .asterisk {
     color: #FF855F;
+    position: sticky;
 }
 
 
@@ -165,8 +218,14 @@
 
 .programNotesContainer {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+}
+
+.programNotesWrapper{
+    position: relative; /* Needed to position the icon inside */
+    width: 100%;
 }
 
 .programNotesInput {
@@ -178,57 +237,23 @@
     background-color: #ffffff;
     resize: vertical;
     min-height: 80px;
+    width: 100%;
 }
 
 .generateNotesButton {
-    background-color: #2b3674;
-    color: white;
+    position: absolute;
+    bottom: 12px; /* Adjust as needed */
+    right: 18px; /* Adjust as needed */
+    background: none;
     border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
+    font-size: 1.2rem;
+    color: #2b3674;
     cursor: pointer;
-    font-size: 0.9rem;
-    align-self: center;
 }
 
-/* Image Upload Section */
-.imageUpload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-}
-
-/* File Input (Hidden) */
-
-
-/* Upload Button */
-.uploadButton {
-    background-color: #E6D4F5;
-    color: #4A306D;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-/* Image Preview */
-.imagePreview {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-/* Placeholder for No Image */
-.imagePlaceholder {
-    width: 100px;
-    height: 100px;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    color: #999;
+.secondHeader {
+    color:#DEDDED;
+    font-size: 20px;
+    margin-top: 15px;
+    font-weight: bold;
 }
