@@ -111,33 +111,14 @@
     color: #fefbf4;
 }
 .infoBackground {
-    position: absolute;
-    top: -4px;
-    left: 210px;
-    background-color: #f9ecd9;
-    width: 708px;
-    height: 1028px;
-}
-/* .eventBackground {
-    position: absolute;
-    top: 0px;
-    left: 918px;
-    background-color: #fefbf4;
-    width: 522px;
-    height: 1024px;
-} */
-.eventBackground {
-    position: absolute;
+    position: fixed; /* Keeps it covering the background even when scrolling */
     top: 0;
-    left: 918px; /* Keeps the left side fixed */
-    right: 0; /* Extends to the right edge */
-    background-color: #fefbf4;
-
-    width: auto; /* Allow width to be flexible */
-    min-width: 522px; /* Prevent it from being too small */
-
-    height: 1028px; /* Extend to the full height of the viewport */
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-color: #f9ecd9;
 }
+
 
 
 

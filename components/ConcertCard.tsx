@@ -3,6 +3,7 @@ import styles from '../styles/ConcertCard.module.css';
 import { Timestamp } from 'firebase/firestore';
 import Image from "next/image";
 
+
 interface ConcertCardProps {
     title: string;
     time: Timestamp;  // Use only Timestamp
@@ -51,4 +52,9 @@ const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, onDele
 };
 
 export default ConcertCard;
+
+
+
+
+
 

@@ -300,35 +300,8 @@ const AccountInformation = () => {
                          alt="Add new profile picture" 
                          src="plus.svg" 
                     />
-                 </button>
+                 </button> 
 
-            </div>
-
-            {/* Your Events Section */}
-            {/* <div className={styles.eventBackground}>
-                <div className={styles.events}>
-                    <b className={styles.yourEvents}>Your Events</b>
-                </div>
-            </div> */}
-            <div className={styles.eventBackground}>
-                <div className={styles.events}>
-                    <b className={styles.yourEvents}>Your Events</b>
-
-                    {events.length > 0 ? (
-                        events.map((event) => (
-                            <ConcertCard 
-                                key={event.id}
-                                title={event.title} 
-                                time={event.time} 
-                                location={event.location} 
-                                onDelete={() => handleDeleteEvent(event.id)}
-                                onUpdate={() => handleUpdateEvent(event.id)}
-                            />
-                        ))
-                    ) : (
-                        <p>No events found.</p>
-                    )}
-                </div>
             </div>
 
             <div className={styles.container}>
