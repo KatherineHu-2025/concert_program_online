@@ -29,6 +29,8 @@ const NavBar: FunctionComponent = () => {
         setActive('database');
     }, []);
 
+
+
     const handleSignUpOrAvatarClick = () => {
         if (user) {
             // Optional: handle sign-out or navigate to profile page
@@ -91,7 +93,7 @@ const NavBar: FunctionComponent = () => {
                 {user ? (
                     <>
                         <Image 
-                            src={user.photoURL || '/default-avatar.png'} 
+                            src={'/default-avatar.svg'} //user.photoURL || 
                             alt="User Avatar" 
                             width={40}  // Adjust the width based on your design
                             height={40} // Adjust the height based on your design

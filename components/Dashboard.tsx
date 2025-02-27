@@ -90,6 +90,7 @@ const Dashboard = () => {
     // Navigate to the add-event form page
     const openAddEventForm = async () => {
         const user = auth.currentUser;
+        
         if (!user) {
             alert("You need to be logged in to create an event.");
             return;
@@ -117,6 +118,18 @@ const Dashboard = () => {
             console.error("Error creating event:", error);
             alert("Failed to create event. Please try again.");
         }
+    };
+
+    const openAccountPage = async () => {
+        const user = auth.currentUser;
+    
+        if (!user) {
+            alert("You need to be logged in to create an event.");
+            return;
+        }
+    
+        // Redirect to the account page
+        window.location.href = "/account"; // Change "/account" to your desired page
     };
 
     // Handle opening the delete confirmation form
@@ -184,6 +197,15 @@ const Dashboard = () => {
     return (
         <div className={styles.background}>
             <h1 className={styles.dashboard}>Dashboard</h1>
+    
+            {/* Button to Navigate to the Account Page */}
+            <button 
+                className={styles.accountButton} 
+                onClick={openAccountPage}
+            >
+                Go to Account Page
+            </button>
+    
             <div className={styles.section}>
                 <div className={styles.upcoming}>
                     <div className={styles.sectionHeader}>
@@ -202,8 +224,9 @@ const Dashboard = () => {
                             <button className={styles.addButton} onClick={openAddEventForm}>+</button>
                         </div>
                     </div>
-
+    
                     {/* Search Input for Upcoming Events */}
+
                     
 
                     {/* Scrollable Event List */}
@@ -225,8 +248,9 @@ const Dashboard = () => {
                             <p className={styles.noResults}>No upcoming events found.</p>
                         )}
                     </div>
-                </div>
 
+                </div>
+    
                 <div className={styles.past}>
                     <div className={styles.sectionHeader}>
                         <h2 className={styles.sectionTitle}>Past</h2>
@@ -262,7 +286,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-
+    
             {/* Delete Confirmation Modal */}
             {isDeleteConfirmOpen && (
                 <div className={styles.modal}>
@@ -285,6 +309,6 @@ const Dashboard = () => {
             )}
         </div>
     );
-};
+}
 
 export default Dashboard;
