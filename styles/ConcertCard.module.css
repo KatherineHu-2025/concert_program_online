@@ -1,29 +1,56 @@
-/* ConcertCard.module.css */
-/*@font-face {
-    font-family: 'Lora';
-    src: url('/fonts/Lora-Regular.ttf') format('truetype'),
-         url('/fonts/Lora-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}*/
-
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400&display=swap');
 
 
 
 .concertCard {
-    background-color: rgba(51, 73, 52, 1);
     border-radius: 16px;
     padding: 20px;
-    /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%; /* Make the card take up full width */
-    height: 30%;
+    min-height: 200px; /* Ensure enough space for the action container */
     margin-bottom: 16px; /* Space between cards */
     margin-top: 10px; /* Space between cards */
     position: relative; /* For positioning the Update button */
+    overflow: hidden;
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.infoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align to avoid pushing avatar too far */
+    gap: 16px;
+    flex-wrap: wrap; /* Ensure it wraps instead of overflowing */
+}
+
+.avatarContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7e0d4;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+}
+
+.avatar {
+    border-radius: 50%;
+}
+
+.detailsContainer {
+    flex: 1;
+}
+
+.eventList {
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
 .cardHeader {
@@ -38,9 +65,10 @@
     font-family: 'Lora', serif !important;
     font-size: 20px;
     font-weight: 700;
+    font-style: italic;
     color: rgba(254, 251, 244, 1);
     line-height: 1.2;
-    margin: 0;
+    margin-bottom: 0.5rem;
 }
 
 .deleteIcon {
@@ -50,7 +78,7 @@
     background-image: url('/trash.svg');
     background-size: contain;
     background-repeat: no-repeat;
-    display: inline-block;
+    display: flex;
 }
 
 .deleteIcon:hover {
@@ -68,15 +96,15 @@
 
 .infoRow {
     font-family: 'Lora', serif !important;
-
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .icon {
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
 }
 
@@ -88,9 +116,6 @@
 
 /* Update button positioned at the bottom-right corner */
 .updateButton {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
     padding: 8px 16px;
     border-radius: 10px;
     background-color: rgba(222, 221, 237, 1);
@@ -101,10 +126,31 @@
     border: none;
     cursor: pointer;
     transition: background-color 0.2s;
+    display: flex;
+    align-items: center; /* Centers text properly */
 }
 
 .updateButton:hover {
     background-color: rgba(116, 114, 179, 1);
     color: rgba(222, 221, 237, 1);
 
+}
+
+.actionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: auto;
+
+}
+
+.upcomingEvent {
+    background-color: #334934; /* Light blue */
+}
+
+/* Past events - Light Gray */
+.pastEvent {
+    background-color: #A5A46B; /* Light gray */
 }

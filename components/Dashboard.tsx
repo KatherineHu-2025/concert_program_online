@@ -14,6 +14,7 @@ import { db } from "../firebaseConfig";
 import { auth } from "../firebaseConfig";
 import styles from "../styles/Dashboard.module.css";
 import ConcertCard from "./ConcertCard";
+import Image from "next/image"
 
 // Define the structure of an event
 interface EventData {
@@ -21,6 +22,7 @@ interface EventData {
     title: string;
     date: Timestamp; // Use Timestamp consistently
     location: string;
+    color: string;
 }
 
 const Dashboard = () => {
@@ -101,6 +103,7 @@ const Dashboard = () => {
                 date: Timestamp.fromDate(new Date()),
                 location: "",
                 concertType: "",
+                color:"#FFFFFF",
                 programs: [],
                 performers: [],
                 performanceGroup: null,
@@ -207,63 +210,80 @@ const Dashboard = () => {
                 <div className={styles.upcoming}>
                     <div className={styles.sectionHeader}>
                         <h2 className={styles.sectionTitle}>Upcoming</h2>
-                        <button
-                            className={styles.addButton}
-                            onClick={openAddEventForm}
-                        >
-                            +
-                        </button>
+                        <div className={styles.searchAddContainer}>
+                            <div className={styles.searchWrapper}>
+                                <Image src="/search_icon.svg" alt="Search" width={20} height={20} className={styles.icon} />
+                                <input
+                                    type="text"
+                                    placeholder="Search"
+                                    value={searchUpcoming}
+                                    onChange={(e) => setSearchUpcoming(e.target.value)}
+                                    className={styles.searchInput}
+                                />
+                            </div>
+                            <button className={styles.addButton} onClick={openAddEventForm}>+</button>
+                        </div>
                     </div>
     
                     {/* Search Input for Upcoming Events */}
-                    <input
-                        type="text"
-                        placeholder="Search upcoming events..."
-                        value={searchUpcoming}
-                        onChange={(e) => setSearchUpcoming(e.target.value)}
-                        className={styles.searchInput}
-                    />
-    
-                    {filteredUpcoming.length > 0 ? (
-                        filteredUpcoming.map((event, index) => (
-                            <ConcertCard
-                                key={event.id}
-                                title={event.title}
-                                time={event.date}
-                                location={event.location}
-                                onDelete={() => openDeleteConfirm(index, event.id)}
-                                onUpdate={() => handleUpdate(event)}
-                            />
-                        ))
-                    ) : (
-                        <p className={styles.noResults}>No upcoming events found.</p>
-                    )}
+
+                    
+
+                    {/* Scrollable Event List */}
+                    <div className={styles.eventList}>
+                        {filteredUpcoming.length > 0 ? (
+                            filteredUpcoming.map((event, index) => (
+                                <ConcertCard
+                                    key={event.id}
+                                    title={event.title}
+                                    time={event.date}
+                                    location={event.location}
+                                    avatarUrl="/concert-avatar.png"
+                                    
+                                    onDelete={() => openDeleteConfirm(index, event.id)}
+                                    onUpdate={() => handleUpdate(event)}
+                                />
+                            ))
+                        ) : (
+                            <p className={styles.noResults}>No upcoming events found.</p>
+                        )}
+                    </div>
+
                 </div>
     
                 <div className={styles.past}>
-                    <h2 className={styles.sectionTitle}>Past</h2>
-                    <input
-                        type="text"
-                        placeholder="Search past events..."
-                        value={searchPast}
-                        onChange={(e) => setSearchPast(e.target.value)}
-                        className={styles.searchInput}
-                    />
-    
-                    {filteredPast.length > 0 ? (
-                        filteredPast.map((event, index) => (
-                            <ConcertCard
-                                key={event.id}
-                                title={event.title}
-                                time={event.date}
-                                location={event.location}
-                                onDelete={() => openDeleteConfirm(index, event.id)}
-                                onUpdate={() => handleUpdate(event)}
+                    <div className={styles.sectionHeader}>
+                        <h2 className={styles.sectionTitle}>Past</h2>
+                        <div className={styles.searchWrapper}>
+                            <Image src="/search_icon.svg" alt="Search" width={20} height={20} className={styles.icon} />
+                            <input
+                                type="text"
+                                placeholder="Search"
+                                value={searchPast}
+                                onChange={(e) => setSearchPast(e.target.value)}
+                                className={styles.searchInput}
                             />
-                        ))
-                    ) : (
-                        <p className={styles.noResults}>No past events found.</p>
-                    )}
+                        </div>
+                    </div>
+
+                    {/* Scrollable Event List */}
+                    <div className={styles.eventList}>
+                        {filteredPast.length > 0 ? (
+                            filteredPast.map((event, index) => (
+                                <ConcertCard
+                                    key={event.id}
+                                    title={event.title}
+                                    time={event.date}
+                                    location={event.location}
+                                    avatarUrl="/concert-avatar.png"
+                                    onDelete={() => openDeleteConfirm(index, event.id)}
+                                    onUpdate={() => handleUpdate(event)}
+                                />
+                            ))
+                        ) : (
+                            <p className={styles.noResults}>No past events found.</p>
+                        )}
+                    </div>
                 </div>
             </div>
     
