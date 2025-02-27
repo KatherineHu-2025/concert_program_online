@@ -1,0 +1,453 @@
+.backgroundBar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #3b3c50;
+    width: 210px;
+    height: 1024px;
+}
+.pfp1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    background-color: #dedded;
+    width: 35px;
+    height: 35px;
+}
+.e {
+    position: absolute;
+    top: 6px;
+    left: 11px;
+    line-height: 23px;
+}
+.pfp {
+    position: absolute;
+    top: 932px;
+    left: 0px;
+    width: 35px;
+    height: 35px;
+    color: #3b3c50;
+}
+.homeIcon {
+    position: absolute;
+    top: 263px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.databaseIcon {
+    position: absolute;
+    top: 314px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.dashboardBar {
+    position: absolute;
+    top: 938px;
+    left: 181px;
+    border-radius: 25px;
+    background-color: #7472b3;
+    width: 3px;
+    height: 23px;
+}
+.account {
+    position: absolute;
+    top: 934px;
+    left: 59px;
+    letter-spacing: -0.02em;
+    line-height: 32px;
+}
+.dashboard {
+    position: absolute;
+    top: 264px;
+    left: 35px;
+    line-height: 23px;
+    font-weight: 500;
+}
+.database {
+    position: absolute;
+    top: 315px;
+    left: 35px;
+    line-height: 23px;
+    font-weight: 500;
+}
+.interactive {
+    margin: 0;
+}
+.interactiveConcertProgramContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    letter-spacing: -0.02em;
+    line-height: 32px;
+}
+.musicIcon {
+    position: absolute;
+    top: 35px;
+    left: 118px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.title {
+    position: absolute;
+    top: 0px;
+    left: 9px;
+    width: 153px;
+    height: 96px;
+    font-size: 30px;
+}
+.sideBar {
+    position: absolute;
+    top: 37px;
+    left: 17px;
+    width: 184px;
+    height: 967px;
+    font-size: 20px;
+    color: #fefbf4;
+}
+.infoBackground {
+    position: fixed; /* Keeps it covering the background even when scrolling */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-color: #f9ecd9;
+}
+
+
+
+
+.initialInfoChild {
+    position: absolute;
+    top: 64px;
+    left: 45px;
+    border-radius: 50%;
+    background-color: #7472b3;
+    width: 100px;
+    height: 100px;
+}
+.name {
+    position: absolute;
+    top: 80px;
+    left: 200px;
+    letter-spacing: -0.02em;
+    line-height: 32px;
+}
+.usernameEmail {
+    position: absolute;
+    top: 118px;
+    left: 197px;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    line-height: 32px;
+}
+.arrowLeftIcon {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.initialInfo {
+    position: absolute;
+    top: 18px;
+    left: 223px;
+    width: 357px;
+    height: 164px;
+    font-size: 30px;
+}
+.passwordBarChild {
+    position: absolute;
+    top: 32px;
+    left: 0px;
+    border-radius: 6px;
+    background-color: #f2c3b3;
+    width: 556px;
+    height: 64px;
+}
+.decorativeDotsIcon {
+    position: absolute;
+    top: 64px;
+    left: 32px;
+    width: 162px;
+    height: 6px;
+}
+.currentPassword {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    line-height: 32px;
+}
+.eyeOffIcon {
+    position: absolute;
+    top: 52px;
+    left: 516px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.changePassword {
+    position: absolute;
+    top: 96px;
+    left: 0px;
+    text-decoration: underline;
+    line-height: 32px;
+}
+.passwordBar {
+    position: absolute;
+    top: 242px;
+    left: 286px;
+    width: 556px;
+    height: 128px;
+}
+.currentName {
+    position: absolute;
+    top: 48px;
+    left: 20px;
+    line-height: 32px;
+    color: #fefbf4;
+}
+.nameChange {
+    position: absolute;
+    top: 402px;
+    left: 286px;
+    width: 556px;
+    height: 96px;
+}
+.username {
+    position: absolute;
+    top: 0px;
+    left: 2px;
+    line-height: 32px;
+}
+.currentUsername {
+    position: absolute;
+    top: 48px;
+    left: 18px;
+    line-height: 32px;
+    color: #fefbf4;
+}
+.usernameChange {
+    position: absolute;
+    top: 530px;
+    left: 288px;
+    width: 556px;
+    height: 96px;
+}
+.currentEmailAddress {
+    position: absolute;
+    top: 48px;
+    left: 21px;
+    line-height: 32px;
+    color: #fefbf4;
+}
+.emailChange {
+    position: absolute;
+    top: 658px;
+    left: 288px;
+    width: 556px;
+    height: 96px;
+}
+.profilePicture {
+    position: absolute;
+    top: 0px;
+    left: 1px;
+    line-height: 32px;
+}
+.profilePictureChangeChild {
+    position: absolute;
+    top: 36px;
+    left: 0px;
+    border-radius: 85px;
+    background-color: #fefbf4;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeItem {
+    position: absolute;
+    top: 36px;
+    left: 416px;
+    border-radius: 85px;
+    background-color: #dedded;
+    border: 1px solid #fefbf4;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeInner {
+    position: absolute;
+    top: 36px;
+    left: 104px;
+    border-radius: 85px;
+    background-color: #a5a46b;
+    width: 40px;
+    height: 40px;
+}
+.rectangleDiv {
+    position: absolute;
+    top: 36px;
+    left: 156px;
+    border-radius: 85px;
+    background-color: #f2c3b3;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeChild1 {
+    position: absolute;
+    top: 36px;
+    left: 208px;
+    border-radius: 85px;
+    background-color: #733e58;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeChild2 {
+    position: absolute;
+    top: 36px;
+    left: 260px;
+    border-radius: 85px;
+    background-color: #7472b3;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeChild3 {
+    position: absolute;
+    top: 36px;
+    left: 312px;
+    border-radius: 85px;
+    background-color: #fefbf4;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeChild4 {
+    position: absolute;
+    top: 36px;
+    left: 364px;
+    border-radius: 85px;
+    background-color: #334934;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeChild5 {
+    position: absolute;
+    top: 36px;
+    left: 53px;
+    border-radius: 85px;
+    background-color: #82634e;
+    width: 40px;
+    height: 40px;
+}
+.profilePictureChangeChild6 {
+    position: absolute;
+    top: 35px;
+    left: 467px;
+    border-radius: 85px;
+    background-color: #e0efd8;
+    border: 1px solid #fefbf4;
+    box-sizing: border-box;
+    width: 42px;
+    height: 42px;
+}
+.profilePictureChangeChild7 {
+    position: absolute;
+    top: 36px;
+    left: 520px;
+    border-radius: 85px;
+    background-color: #3b3c50;
+    width: 40px;
+    height: 40px;
+}
+.plusIcon {
+    position: absolute;
+    top: 44px;
+    left: 8px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+}
+.profilePictureChange {
+    position: absolute;
+    top: 786px;
+    left: 289px;
+    width: 560px;
+    height: 76px;
+}
+/* .events {
+    position: absolute;
+    top: 38px;
+    left: 1096px;
+    width: 166px;
+    height: 32px;
+    font-size: 30px;
+} */
+
+.events {
+    position: absolute;
+    top: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    font-size: 30px;
+    text-align: center;
+}
+
+.eventsContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.accountInformation {
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    height: 1024px;
+    overflow: hidden;
+    text-align: left;
+    font-size: 15px;
+    color: #3b3c50;
+    font-family: Lora;
+}
+/* 
+.profilePictureChange {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.selectedProfilePicture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #ccc;
+}
+
+.colorOptions {
+    display: flex;
+    gap: 10px;
+}
+
+.colorCircle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s;
+}
+
+.colorCircle:hover {
+    transform: scale(1.1);
+}
+
+.selected {
+    border: 2px solid black;
+} */
+
