@@ -6,7 +6,6 @@ import Image from "next/image";
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import styles from "../../styles/SignUp.module.css";
-import DecorativeDivider from "@/components/DecorativeDots";
 import { Lora } from "next/font/google";
 
 const lora = Lora({ subsets: ["latin"], weight: ["400", "700"] });
@@ -70,7 +69,7 @@ const SignUpPage = () => {
                         <h2 className={styles.heading}>Register Administrative Account!</h2>
                         <p className={styles.subheading}>For purposes of hosting and editing events, an account is required.</p>
                     </div>
-                    <DecorativeDivider dotCount={20} musicNotePosition="front" />
+
                     <form onSubmit={handlePasswordSubmit} className={styles.form}>
                         <label>
                             Your username

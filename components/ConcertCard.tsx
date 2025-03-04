@@ -8,12 +8,12 @@ interface ConcertCardProps {
     title: string;
     time: Timestamp;
     location: string;
-    avatarUrl: string; // Add avatar URL as a prop
+    color: string; 
     onDelete: () => void;
     onUpdate: () => void;
 }
 
-const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, avatarUrl, onDelete, onUpdate }) => {
+const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, color, onDelete, onUpdate }) => {
     const dateObj = time.toDate();
     const formattedDate = dateObj.toLocaleDateString(undefined, { 
         month: '2-digit', 
@@ -45,15 +45,7 @@ const ConcertCard: React.FC<ConcertCardProps> = ({ title, time, location, avatar
                         </div>
                     </div>
 
-                    <div className={styles.avatarContainer}>
-                        <Image 
-                            src={avatarUrl} 
-                            alt="Concert Avatar" 
-                            width={75} 
-                            height={75} 
-                            className={styles.avatar} 
-                        />
-                    </div>
+                    <div className={styles.avatarContainer} style={{ backgroundColor: color }}></div>
                 </div>
             </div>
 

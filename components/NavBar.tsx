@@ -2,8 +2,9 @@
 
 import { FunctionComponent, useCallback, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth } from '../firebaseConfig';  // Import auth from firebaseConfig
-import { User, signOut } from 'firebase/auth';
+import { auth, db } from '../firebaseConfig';  // Import auth from firebaseConfig
+import { User } from 'firebase/auth';
+import { doc, getDoc } from "firebase/firestore";
 import styles from '../styles/NavBar.module.css';
 import Image from "next/image";
 
@@ -11,11 +12,20 @@ import Image from "next/image";
 const NavBar: FunctionComponent = () => {
     const [active, setActive] = useState<'dashboard' | 'database'>('dashboard');
     const [user, setUser] = useState<User | null>(null); // Type user as User | null
+    const [profileColor, setProfileColor] = useState("#FFFFFF"); // Default color
     const router = useRouter();
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+        const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
             setUser(currentUser); // currentUser is of type User | null
+
+            if (currentUser) {
+                const userDocRef = doc(db, "users", currentUser.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    setProfileColor(userDoc.data().profileColor || "#A5A46B"); // Update state
+                }
+            }
         });
         return () => unsubscribe();
     }, []);
@@ -23,7 +33,7 @@ const NavBar: FunctionComponent = () => {
     const handleDashboardClick = useCallback(() => {
         setActive('dashboard');
         router.push('/');
-    }, []);
+    }, [router]);
 
     const handleDatabaseClick = useCallback(() => {
         setActive('database');
@@ -34,10 +44,7 @@ const NavBar: FunctionComponent = () => {
     const handleSignUpOrAvatarClick = () => {
         if (user) {
             // Optional: handle sign-out or navigate to profile page
-            signOut(auth).then(() => {
-                setUser(null);
-                router.push('/');
-            });
+            router.push('/account')
         } else {
             // Navigate to the signup page if the user is not logged in
             router.push('/signup');
@@ -92,15 +99,12 @@ const NavBar: FunctionComponent = () => {
             <div className={styles.account} onClick={handleSignUpOrAvatarClick}>
                 {user ? (
                     <>
-                        <Image 
-                            src={'/default-avatar.svg'} //user.photoURL || 
-                            alt="User Avatar" 
-                            width={40}  // Adjust the width based on your design
-                            height={40} // Adjust the height based on your design
-                            className={styles.avatar} 
-                        />
-                        <span className={styles.userName}>{user.displayName || "User"}</span>
-                    </>
+                    <div 
+                        className={styles.avatar} 
+                        style={{ backgroundColor: profileColor }}
+                    />
+                    <span className={styles.userName}>{user.displayName || "User"}</span>
+                </>
                 ) : (
                     <div className={styles.signUp}>Sign Up</div>
                 )}

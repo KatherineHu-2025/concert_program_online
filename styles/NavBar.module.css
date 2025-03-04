@@ -1,7 +1,7 @@
 /* NavBar.module.css */
 
 .navbar {
-    width: 215px;
+    width: 250px;
     height: 100vh;
     background-color: rgba(59, 60, 80, 1);
     display: flex;

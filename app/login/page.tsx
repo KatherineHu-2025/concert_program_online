@@ -6,7 +6,6 @@ import Image from "next/image";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import styles from "../../styles/SignUp.module.css"; // Using same styles as SignUp
-import DecorativeDivider from "@/components/DecorativeDots";
 import { Lora } from "next/font/google";
 
 const lora = Lora({ subsets: ["latin"], weight: ["400", "700"] });
@@ -69,8 +68,6 @@ const LoginPage = () => {
                         <h2 className={styles.heading}>Administrative Account Login!</h2>
                         <p className={styles.subheading}>To host and edit events, an account is required.</p>
                     </div>
-
-                    <DecorativeDivider dotCount={15} musicNotePosition="back" />
 
                     <form onSubmit={handleLogin} className={styles.form}>
                         <label>

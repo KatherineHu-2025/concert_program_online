@@ -120,18 +120,6 @@ const Dashboard = () => {
         }
     };
 
-    const openAccountPage = async () => {
-        const user = auth.currentUser;
-    
-        if (!user) {
-            alert("You need to be logged in to create an event.");
-            return;
-        }
-    
-        // Redirect to the account page
-        window.location.href = "/account"; // Change "/account" to your desired page
-    };
-
     // Handle opening the delete confirmation form
     const openDeleteConfirm = (index: number, id: string) => {
         setSelectedEventIndex(index);
@@ -198,14 +186,6 @@ const Dashboard = () => {
         <div className={styles.background}>
             <h1 className={styles.dashboard}>Dashboard</h1>
     
-            {/* Button to Navigate to the Account Page */}
-            <button 
-                className={styles.accountButton} 
-                onClick={openAccountPage}
-            >
-                Go to Account Page
-            </button>
-    
             <div className={styles.section}>
                 <div className={styles.upcoming}>
                     <div className={styles.sectionHeader}>
@@ -238,8 +218,7 @@ const Dashboard = () => {
                                     title={event.title}
                                     time={event.date}
                                     location={event.location}
-                                    avatarUrl="/concert-avatar.png"
-                                    
+                                    color={event.color}
                                     onDelete={() => openDeleteConfirm(index, event.id)}
                                     onUpdate={() => handleUpdate(event)}
                                 />
@@ -275,7 +254,7 @@ const Dashboard = () => {
                                     title={event.title}
                                     time={event.date}
                                     location={event.location}
-                                    avatarUrl="/concert-avatar.png"
+                                    color={event.color}
                                     onDelete={() => openDeleteConfirm(index, event.id)}
                                     onUpdate={() => handleUpdate(event)}
                                 />
