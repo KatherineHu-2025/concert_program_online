@@ -99,10 +99,9 @@ const NavBar: FunctionComponent = () => {
             <div className={styles.account} onClick={handleSignUpOrAvatarClick}>
                 {user ? (
                     <>
-                    <div 
-                        className={styles.avatar} 
-                        style={{ backgroundColor: profileColor }}
-                    />
+                    <div className={styles.avatar} style={{ backgroundColor: profileColor }}>
+                        {user.displayName ? user.displayName.charAt(0).toUpperCase() : "?"}
+                    </div>
                     <span className={styles.userName}>{user.displayName || "User"}</span>
                 </>
                 ) : (

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../../firebaseConfig";
-import { signOut, User } from "firebase/auth";
+import { signOut, User, sendPasswordResetEmail } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import styles from "../../styles/Account.module.css";
 import NavBar from "../../components/NavBar";
@@ -69,6 +69,19 @@ const AccountPage = () => {
         router.push("/signup"); // Redirect to login page after sign out
     };
 
+    const handlePasswordReset = async () => {
+        if (!email) {
+            alert("No email found. Please check your account settings.");
+            return;
+        }
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Password reset email sent! Check your inbox.");
+        } catch (error) {
+            alert("Failed to send password reset email: " + (error instanceof Error ? error.message : "Unknown error"));
+        }
+    };
+
     return (
         <div className={styles.container}>
             <NavBar />
@@ -77,7 +90,9 @@ const AccountPage = () => {
                     <Image src="/arrow-left.svg" alt="Back" width={24} height={24} className={styles.icon} />
                 </button>
                 <div className={styles.profileSection}>
-                    <div className={styles.avatar} style={{ backgroundColor: selectedColor }} />
+                    <div className={styles.avatar} style={{ backgroundColor: selectedColor }} >
+                        {name ? name.charAt(0).toUpperCase() : "?"}
+                    </div>
                     <div className = {styles.nameAndEmail}>
                         <h2 className={styles.name}>{name || "Name"}</h2>
                         <p className={styles.email}>{email}</p>
@@ -89,11 +104,11 @@ const AccountPage = () => {
 
                     <label>Current Password</label>
                     <input type="password" className={styles.input} disabled value="********" />
-                    <a href="#" className={styles.changePassword}>Change Password?</a>
+                    <button onClick={handlePasswordReset} className={styles.changePassword}>Change Password?</button>
                     
                     <label>Profile Picture</label>
                     <div className={styles.colorPicker}>
-                        {["#DEDDED", "#A5A46B", "#F2C3B3", "#7472B3", "#334934", "#D8F8D8", "#232239"].map((color) => (
+                        {["#82634E","#A5A46B","#F2C3B3","#733E58","#7472B3", "#FEFBF4", "#334934", "#DEDDED", "#D8F8D8", "#3B3C50"].map((color) => (
                             <div 
                                 key={color} 
                                 className={styles.colorOption} 
