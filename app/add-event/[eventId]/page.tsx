@@ -26,7 +26,8 @@ const AddEventForm = () => {
     const [location, setLocation] = useState('');
     const [concertType, setConcertType] = useState('');
     const [customSections, setCustomSections] = useState<{ title: string, content: string }[]>([]);
-    
+    const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+
     // Fetch event data if editing an existing event
     useEffect(() => {
         const fetchEventData = async () => {
@@ -153,7 +154,9 @@ const AddEventForm = () => {
             alert("Please fill in both the composer and piece fields to generate program notes.");
             return;
         }
-    
+        
+        setLoadingIndex(index);
+
         try {
             const response = await fetch("https://concert-program-online-backend.onrender.com/generate_program_note/", {
                 method: "POST",
@@ -178,7 +181,9 @@ const AddEventForm = () => {
         } catch (error) {
             console.error("Error fetching program notes:", error);
             alert("Failed to fetch program notes. Please try again.");
-        }
+        }finally {
+        setLoadingIndex(null); // Clear loading index after the process is complete
+    }
     };
 
     // Function to handle adding a new custom section
@@ -414,9 +419,14 @@ const AddEventForm = () => {
                                     <button
                                         type="button"
                                         onClick={() => handleGenerateNotes(index)}
-                                        className={styles.generateNotesButton}
+                                        className={`${styles.generateNotesButton} ${loadingIndex === index ? styles.disabledButton : ''}`}
+                                        disabled={loadingIndex === index} // Disable the button when loading
                                     >
-                                        <Image src="/AI.svg" alt="Generate Notes" width={24} height={24} />
+                                        {loadingIndex === index ? (
+                                            <div className={styles.loader}></div> // Show loading spinner when API is pending
+                                        ) : (
+                                            <Image src="/AI.svg" alt="Generate Notes" width={24} height={24} />
+                                        )}
                                     </button>
                                 </div>
                             </div>

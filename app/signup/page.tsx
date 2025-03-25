@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Auth, updateProfile } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import styles from "../../styles/SignUp.module.css";
 import { Lora } from "next/font/google";
@@ -17,6 +17,7 @@ const SignUpPage = () => {
     const [auth, setAuth] = useState<Auth | null>(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
     const [error, setError] = useState<string | null>(null);
   
     useEffect(() => {
@@ -29,7 +30,10 @@ const SignUpPage = () => {
       setError(null);
   
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, {
+            displayName: username // Add username to Firebase user profile
+        });
         router.push("/");
       } catch (err) {
         setError(err instanceof FirebaseError ? err.message : "An unexpected error occurred");
@@ -75,7 +79,7 @@ const SignUpPage = () => {
                             Your username
                             <span className={styles.asterisk}>*</span>
                         </label>
-                        <input type="text" className={styles.inputField} required placeholder="Enter your username" />
+                        <input type="text" className={styles.inputField} value={username} onChange={(e) => setUsername(e.target.value)} required placeholder="Enter your username" />
                         <label>
                             Email address
                             <span className={styles.asterisk}>*</span>

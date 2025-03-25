@@ -113,7 +113,8 @@
 
 .titleWithLabel{
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
 }
 
 .plusIcon{
@@ -251,9 +252,30 @@
     cursor: pointer;
 }
 
+
+.disabledButton {
+    cursor: not-allowed;     /* Disabled cursor */
+    pointer-events: none;    /* Prevents click interactions */
+}
+
 .secondHeader {
     color:#DEDDED;
     font-size: 20px;
-    margin-top: 15px;
     font-weight: bold;
+}
+
+
+.loader {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #2b3674;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 0.8s linear infinite;
+    
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

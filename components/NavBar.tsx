@@ -1,56 +1,59 @@
 "use client";
 
-import { FunctionComponent, useCallback, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { auth, db } from '../firebaseConfig';  // Import auth from firebaseConfig
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { auth, db } from '../firebaseConfig';
 import { User } from 'firebase/auth';
 import { doc, getDoc } from "firebase/firestore";
 import styles from '../styles/NavBar.module.css';
 import Image from "next/image";
 
-
 const NavBar: FunctionComponent = () => {
     const [active, setActive] = useState<'dashboard' | 'database'>('dashboard');
-    const [user, setUser] = useState<User | null>(null); // Type user as User | null
-    const [profileColor, setProfileColor] = useState("#FFFFFF"); // Default color
+    const [user, setUser] = useState<User | null>(null);
+    const [profileColor, setProfileColor] = useState("#FFFFFF");
     const router = useRouter();
+    const pathname = usePathname(); // Detects current route
+
+    useEffect(() => {
+        // Set active page based on current route
+        if (pathname === "/") {
+            setActive('dashboard');
+        } else if (pathname === "/database") {
+            setActive('database');
+        }
+    }, [pathname]);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-            setUser(currentUser); // currentUser is of type User | null
+            setUser(currentUser);
 
             if (currentUser) {
                 const userDocRef = doc(db, "users", currentUser.uid);
                 const userDoc = await getDoc(userDocRef);
                 if (userDoc.exists()) {
-                    setProfileColor(userDoc.data().profileColor || "#A5A46B"); // Update state
+                    setProfileColor(userDoc.data().profileColor || "#A5A46B");
                 }
             }
         });
         return () => unsubscribe();
     }, []);
 
-    const handleDashboardClick = useCallback(() => {
-        setActive('dashboard');
+    const handleDashboardClick = () => {
         router.push('/');
-    }, [router]);
+    };
 
-    const handleDatabaseClick = useCallback(() => {
-        setActive('database');
-    }, []);
-
-
+    const handleDatabaseClick = () => {
+        router.push('/database');
+    };
 
     const handleSignUpOrAvatarClick = () => {
         if (user) {
-            // Optional: handle sign-out or navigate to profile page
-            router.push('/account')
+            router.push('/account');
         } else {
-            // Navigate to the signup page if the user is not logged in
             router.push('/signup');
         }
     };
-    
 
     return (
         <div className={styles.navbar}>
@@ -92,18 +95,17 @@ const NavBar: FunctionComponent = () => {
                 <div
                     className={styles.activeBar}
                    style={{ transform: active === 'dashboard' ? 'translateY(0)' : 'translateY(60px)' }}
-                    //style = {{transform: `translate(${active === 'dashboard' ? '0, 0' : '0, 60px'}) translateX(-5px)`}}
                 />
             </div>
             
             <div className={styles.account} onClick={handleSignUpOrAvatarClick}>
                 {user ? (
                     <>
-                    <div className={styles.avatar} style={{ backgroundColor: profileColor }}>
-                        {user.displayName ? user.displayName.charAt(0).toUpperCase() : "?"}
-                    </div>
-                    <span className={styles.userName}>{user.displayName || "User"}</span>
-                </>
+                        <div className={styles.avatar} style={{ backgroundColor: profileColor }}>
+                            {user.displayName ? user.displayName.charAt(0).toUpperCase() : "?"}
+                        </div>
+                        <span className={styles.userName}>{user.displayName || "User"}</span>
+                    </>
                 ) : (
                     <div className={styles.signUp}>Sign Up</div>
                 )}

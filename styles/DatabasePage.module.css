@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+}
+
+.imageContainer {
+    flex: 1; /* Takes the remaining space after NavBar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Needed for fullscreen image positioning */
+}
+
+.fullscreenImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image scales to fill the space */
+}
