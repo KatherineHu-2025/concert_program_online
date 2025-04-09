@@ -215,6 +215,7 @@ const Dashboard = () => {
                             filteredUpcoming.map((event, index) => (
                                 <ConcertCard
                                     key={event.id}
+                                    id={event.id}
                                     title={event.title}
                                     time={event.date}
                                     location={event.location}
@@ -251,6 +252,7 @@ const Dashboard = () => {
                             filteredPast.map((event, index) => (
                                 <ConcertCard
                                     key={event.id}
+                                    id={event.id}
                                     title={event.title}
                                     time={event.date}
                                     location={event.location}
