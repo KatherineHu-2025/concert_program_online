@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import NavBar from '../../../components/NavBar';
 import styles from '../../../styles/AddEvent.module.css';
-import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { auth } from '../../../firebaseConfig';
@@ -120,14 +120,26 @@ const AddEventForm = () => {
     
         try {
             if (eventId) {
-                // Update existing event under the user's collection
+                // Update in user collection
                 const eventDocRef = doc(db, 'users', user.uid, 'events', eventId as string);
                 await updateDoc(eventDocRef, eventData);
+            
+                // Use setDoc instead of updateDoc for public events
+                const publicEventRef = doc(db, 'publicEvents', eventId as string);
+                await setDoc(publicEventRef, {
+                    ...eventData,
+                    createdBy: user.uid,
+                });
             } else {
-                // Add new event under the user's collection
+                // Add new event in user collection
                 const userEventsCollectionRef = collection(db, 'users', user.uid, 'events');
                 const docRef = await addDoc(userEventsCollectionRef, eventData);
-                console.log("Document written with ID:", docRef.id); // Debugging
+            
+                // Also add to publicEvents collection
+                await setDoc(doc(db, 'publicEvents', docRef.id), {
+                    ...eventData,
+                    createdBy: user.uid,
+                });
             }
     
             // Reset form fields after successful submission
