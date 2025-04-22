@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import NavBar from '../../../components/NavBar';
 import styles from '../../../styles/AddEvent.module.css';
-import { collection, addDoc, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, setDoc, getDocs, query, where } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { auth } from '../../../firebaseConfig';
@@ -17,7 +17,7 @@ const AddEventForm = () => {
     const { eventId } = useParams();
 
     const [programs, setPrograms] = useState([{ composer: '', piece: '', notes: '' }]);
-    const [performers, setPerformer] = useState([{ name: '', role: '' }]);
+    const [performers, setPerformer] = useState([{ name: '', role: '', bio: '' }]);
     const [heading, setHeading] = useState("Input your title here...");
     const [isEditingHeading, setIsEditingHeading] = useState(false);
     const [isPerformanceGroup, setIsPerformanceGroup] = useState(false);
@@ -27,6 +27,13 @@ const AddEventForm = () => {
     const [concertType, setConcertType] = useState('');
     const [customSections, setCustomSections] = useState<{ title: string, content: string }[]>([]);
     const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+    const [color, setColor] = useState("#FFFFFF");
+    const [sponsorText, setSponsorText] = useState('');
+    const [performanceGroupBio, setPerformanceGroupBio] = useState('');
+    const [performerSuggestions, setPerformerSuggestions] = useState<Array<{name: string, role: string, bio: string}>>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [performanceGroupSuggestions, setPerformanceGroupSuggestions] = useState<Array<{name: string, bio: string}>>([]);
+    const [showPerformanceGroupSuggestions, setShowPerformanceGroupSuggestions] = useState(false);
 
     // Fetch event data if editing an existing event
     useEffect(() => {
@@ -53,11 +60,14 @@ const AddEventForm = () => {
                         setEventDate(data.date.toDate().toLocaleString('sv-SE').slice(0, 16));
                         setLocation(data.location || "");
                         setConcertType(data.concertType || "");
+                        setColor(data.color || "#FFFFFF");
                         setPrograms(data.programs || [{ composer: "", piece: "", notes: "" }]);
-                        setPerformer(data.performers || [{ name: "", role: "" }]);
+                        setPerformer(data.performers || [{ name: "", role: "", bio: "" }]);
                         setIsPerformanceGroup(!!data.performanceGroup);
                         setPerformanceGroupName(data.performanceGroup || "");
                         setCustomSections(data.customSections || []);
+                        setSponsorText(data.sponsorText || '');
+                        setPerformanceGroupBio(data.performanceGroupBio || '');
                     } else {
                         alert("No event data found.");
                     }
@@ -70,6 +80,129 @@ const AddEventForm = () => {
     
         fetchEventData();
     }, [eventId]);
+
+    // Function to store performer data separately
+    const storePerformerData = async (performer: { name: string, role: string, bio: string }) => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            const performersRef = collection(db, 'performers');
+            const q = query(performersRef, where("name", "==", performer.name));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                await addDoc(performersRef, {
+                    name: performer.name,
+                    role: performer.role,
+                    bio: performer.bio,
+                    createdBy: user.uid,
+                    createdAt: new Date()
+                });
+            }
+        } catch (error) {
+            console.error("Error storing performer data:", error);
+        }
+    };
+
+    // Function to store performance group data separately
+    const storePerformanceGroupData = async (name: string, bio: string) => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            const groupsRef = collection(db, 'performanceGroups');
+            const q = query(groupsRef, where("name", "==", name));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                await addDoc(groupsRef, {
+                    name: name,
+                    bio: bio,
+                    createdBy: user.uid,
+                    createdAt: new Date()
+                });
+            }
+        } catch (error) {
+            console.error("Error storing performance group data:", error);
+        }
+    };
+
+    // Function to search for performers
+    const searchPerformers = async (searchTerm: string) => {
+        if (!searchTerm || searchTerm.length < 2) {
+            setPerformerSuggestions([]);
+            setShowSuggestions(false);
+            return;
+        }
+
+        try {
+            const performersRef = collection(db, 'performers');
+            const q = query(performersRef, where("name", ">=", searchTerm), where("name", "<=", searchTerm + '\uf8ff'));
+            const querySnapshot = await getDocs(q);
+            
+            const suggestions = querySnapshot.docs.map(doc => doc.data() as {name: string, role: string, bio: string});
+            setPerformerSuggestions(suggestions);
+            setShowSuggestions(true);
+        } catch (error) {
+            console.error("Error searching performers:", error);
+        }
+    };
+
+    // Function to search for performance groups
+    const searchPerformanceGroups = async (searchTerm: string) => {
+        if (!searchTerm || searchTerm.length < 2) {
+            setPerformanceGroupSuggestions([]);
+            setShowPerformanceGroupSuggestions(false);
+            return;
+        }
+
+        try {
+            const groupsRef = collection(db, 'performanceGroups');
+            const q = query(groupsRef, where("name", ">=", searchTerm), where("name", "<=", searchTerm + '\uf8ff'));
+            const querySnapshot = await getDocs(q);
+            
+            const suggestions = querySnapshot.docs.map(doc => doc.data() as {name: string, bio: string});
+            setPerformanceGroupSuggestions(suggestions);
+            setShowPerformanceGroupSuggestions(true);
+        } catch (error) {
+            console.error("Error searching performance groups:", error);
+        }
+    };
+
+    // Update handlePerformerChange to include search
+    const handlePerformerChange = async (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        const newPerformers = [...performers];
+        newPerformers[index] = { ...newPerformers[index], [name]: value };
+        setPerformer(newPerformers);
+
+        if (name === 'name') {
+            await searchPerformers(value);
+        }
+    };
+
+    // Function to select a suggestion
+    const handleSelectSuggestion = (index: number, suggestion: {name: string, role: string, bio: string}) => {
+        const newPerformers = [...performers];
+        newPerformers[index] = suggestion;
+        setPerformer(newPerformers);
+        setShowSuggestions(false);
+    };
+
+    // Handle performance group name change with search
+    const handlePerformanceGroupNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setPerformanceGroupName(value);
+        await searchPerformanceGroups(value);
+    };
+
+    // Function to select a performance group suggestion
+    const handleSelectPerformanceGroupSuggestion = (suggestion: {name: string, bio: string}) => {
+        setPerformanceGroupName(suggestion.name);
+        setPerformanceGroupBio(suggestion.bio);
+        setShowPerformanceGroupSuggestions(false);
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -98,7 +231,7 @@ const AddEventForm = () => {
         );
 
         const filteredPerformers = performers.filter(
-            (p) => p.name.trim() || p.role.trim()
+            (p) => p.name.trim() || p.role.trim() || p.bio.trim()
         );
 
         const filteredCustomSections = customSections.filter(
@@ -110,15 +243,30 @@ const AddEventForm = () => {
             date: Timestamp.fromDate(new Date(eventDate)),
             location,
             concertType,
+            color,
             programs: filteredPrograms,
             performers: filteredPerformers,
             performanceGroup: isPerformanceGroup ? performanceGroupName : null,
+            performanceGroupBio: isPerformanceGroup ? performanceGroupBio : null,
+            sponsorText,
             customSections: filteredCustomSections,
         };
     
         console.log("Submitting Event Data:", eventData); // Debugging
     
         try {
+            // Store performer data separately
+            for (const performer of filteredPerformers) {
+                if (performer.name.trim()) {
+                    await storePerformerData(performer);
+                }
+            }
+
+            // Store performance group data separately if selected
+            if (isPerformanceGroup && performanceGroupName.trim()) {
+                await storePerformanceGroupData(performanceGroupName, performanceGroupBio);
+            }
+
             if (eventId) {
                 // Update in user collection
                 const eventDocRef = doc(db, 'users', user.uid, 'events', eventId as string);
@@ -148,10 +296,12 @@ const AddEventForm = () => {
             setLocation('');
             setConcertType('');
             setPrograms([{ composer: '', piece: '', notes: '' }]);
-            setPerformer([{ name: '', role: '' }]);
+            setPerformer([{ name: '', role: '', bio: '' }]);
             setIsPerformanceGroup(false);
             setPerformanceGroupName('');
             setCustomSections([]);
+            setSponsorText('');
+            setPerformanceGroupBio('');
             router.push('/');
         } catch (error) {
             console.error("Error adding/updating document:", error);
@@ -220,17 +370,9 @@ const AddEventForm = () => {
     };
 
     const handleAddPerformer = () => {
-        setPerformer([...performers, { name:'', role: '' }])
-    }
+        setPerformer([...performers, { name: '', role: '', bio: '' }]);
+    };
 
-    const handlePerformerChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        const newPerformers = [...performers];
-        newPerformers[index] = { ...newPerformers[index], [name]: value };
-        setPerformer(newPerformers);
-    }
-
-    // Function to handle input changes for the program pieces
     const handleProgramChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         const newPrograms = [...programs];
@@ -252,6 +394,11 @@ const AddEventForm = () => {
         if (e.type === 'blur' || (e.type === 'keydown' && (e as React.KeyboardEvent).key === 'Enter')) {
             setIsEditingHeading(false);
         }
+    };
+
+    // Add a handler for color changes
+    const handleColorChange = (newColor: string) => {
+        setColor(newColor);
     };
 
     return (
@@ -285,25 +432,29 @@ const AddEventForm = () => {
                     <label>Time
                         <span className={styles.asterisk}>*</span>
                     </label>
-                    <input
-                        type="datetime-local"
-                        name="time"
-                        value={eventDate}
-                        onChange={(e) => setEventDate(e.target.value)}
-                        required
-                    />
+                    <div className={styles.inputWrapper}>
+                        <input
+                            type="datetime-local"
+                            name="time"
+                            value={eventDate}
+                            onChange={(e) => setEventDate(e.target.value)}
+                            required
+                        />
+                    </div>
 
                     <label>Location 
                         <span className={styles.asterisk}>*</span>
                     </label>
-                    <input
-                        type="text"
-                        name="location"
-                        placeholder="Text"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        required
-                    />
+                    <div className={styles.inputWrapper}>
+                        <input
+                            type="text"
+                            name="location"
+                            placeholder="Text"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            required
+                        />
+                    </div>
 
                     <label>Concert Type 
                         <span className={styles.asterisk}>*</span>
@@ -320,7 +471,11 @@ const AddEventForm = () => {
                             <option value="Symphony">Symphony</option>
                             <option value="Chamber">Chamber</option>
                         </select>
-                        <ColorCircle eventId={eventId as string}></ColorCircle>
+                        <ColorCircle 
+                            eventId={eventId as string}
+                            selectedColor={color}
+                            onColorChange={handleColorChange}
+                        />
                     </div>
 
                     <div className={styles.secondHeader}>Performer(s) and Conductor(s)</div>
@@ -336,14 +491,40 @@ const AddEventForm = () => {
 
                     {/* Conditionally render the Performance Group input field */}
                     {isPerformanceGroup && (
-                        <input
-                        type="text"
-                        name="performanceGroupName"
-                        placeholder="Performance Group Name"
-                        value={performanceGroupName}
-                        onChange={(e) => setPerformanceGroupName(e.target.value)}
-                        className={styles.performanceGroupInput}
-                        />
+                        <>
+                            <div className={styles.inputWithSuggestions}>
+                                <input
+                                    type="text"
+                                    name="performanceGroupName"
+                                    placeholder="Performance Group Name"
+                                    value={performanceGroupName}
+                                    onChange={handlePerformanceGroupNameChange}
+                                    className={styles.performanceGroupInput}
+                                />
+                                {showPerformanceGroupSuggestions && performanceGroupName && performanceGroupSuggestions.length > 0 && (
+                                    <div className={styles.suggestions}>
+                                        {performanceGroupSuggestions.map((suggestion, i) => (
+                                            <div
+                                                key={i}
+                                                className={styles.suggestionItem}
+                                                onClick={() => handleSelectPerformanceGroupSuggestion(suggestion)}
+                                            >
+                                                {suggestion.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <div className={styles.programNotesContainer}>
+                                <label>Performance Group Bio</label>
+                                <textarea
+                                    value={performanceGroupBio}
+                                    onChange={(e) => setPerformanceGroupBio(e.target.value)}
+                                    placeholder="Enter performance group biography..."
+                                    className={styles.programNotesInput}
+                                />
+                            </div>
+                        </>
                     )}
 
                     <div className={styles.titleWithLabel}>
@@ -360,21 +541,48 @@ const AddEventForm = () => {
 
                     
                     {performers.map((performer, index) => (
-                        <div key={index} className={styles.additionalPerformer}>
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder={`Performer Name`}
-                                value={performer.name}
-                                onChange={(e) => handlePerformerChange(index, e)}
-                            />
-                            <input
-                                type="text"
-                                name="role"
-                                placeholder={`Performer Role`}
-                                value={performer.role}
-                                onChange={(e) => handlePerformerChange(index, e)}
-                            />
+                        <div key={index} className={styles.program}>
+                            <div className={styles.additionalPerformer}>
+                                <div className={styles.inputWithSuggestions}>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Performer Name"
+                                        value={performer.name}
+                                        onChange={(e) => handlePerformerChange(index, e)}
+                                    />
+                                    {showSuggestions && performer.name && performerSuggestions.length > 0 && (
+                                        <div className={styles.suggestions}>
+                                            {performerSuggestions.map((suggestion, i) => (
+                                                <div
+                                                    key={i}
+                                                    className={styles.suggestionItem}
+                                                    onClick={() => handleSelectSuggestion(index, suggestion)}
+                                                >
+                                                    {suggestion.name} - {suggestion.role}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                <input
+                                    type="text"
+                                    name="role"
+                                    placeholder="Performer Role"
+                                    value={performer.role}
+                                    onChange={(e) => handlePerformerChange(index, e)}
+                                />
+                            </div>
+                            <div className={styles.programNotesContainer}>
+                                <label>Performer Bio</label>
+                                <textarea
+                                    name="bio"
+                                    placeholder="Enter performer biography..."
+                                    value={performer.bio}
+                                    onChange={(e) => handlePerformerChange(index, e)}
+                                    className={styles.programNotesInput}
+                                />
+                            </div>
                         </div>
                     ))}
                     
@@ -444,6 +652,16 @@ const AddEventForm = () => {
                             </div>
                         </div>
                     ))}
+
+                    <div className={styles.secondHeader}>Sponsors</div>
+                    <div className={styles.programNotesContainer}>
+                        <textarea
+                            placeholder="Enter sponsor information here..."
+                            value={sponsorText}
+                            onChange={(e) => setSponsorText(e.target.value)}
+                            className={styles.programNotesInput}
+                        />
+                    </div>
 
                     <div className={styles.secondHeader}>Custom Sections</div>
                     {customSections.map((section, index) => (

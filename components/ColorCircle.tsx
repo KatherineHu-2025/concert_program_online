@@ -1,42 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "../styles/ColorCircle.module.css";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { auth } from "../firebaseConfig";
 
 const colors = ["#82634E", "#A5A46B", "#F2C3B3", "#733E58", "#7472B3", "#FEFBF4", "#334934"];
 
 interface ColorCircleProps {
-    eventId: string; // Pass eventId as a prop
+    eventId: string;
+    selectedColor: string;
+    onColorChange: (color: string) => void;
 }
 
-const ColorCircle: React.FC<ColorCircleProps> = ({ eventId }) => {
-    const [selectedColor, setSelectedColor] = useState(colors[0]);
+const ColorCircle: React.FC<ColorCircleProps> = ({ eventId, selectedColor, onColorChange }) => {
     const [showMenu, setShowMenu] = useState(false);
-
     const user = auth.currentUser;
 
-    // Fetch stored color for this event
-    useEffect(() => {
-        const fetchColor = async () => {
-            if (!user || !eventId) return;
+    const fetchColor = useCallback(async () => {
+        if (!user || !eventId) return;
+        
+        try {
             const eventDoc = doc(db, "users", user.uid, "events", eventId);
             const docSnap = await getDoc(eventDoc);
-            if (docSnap.exists()) {
-                setSelectedColor(docSnap.data().color || colors[0]);
+            if (docSnap.exists() && docSnap.data().color) {
+                onColorChange(docSnap.data().color);
             }
-        };
-        fetchColor();
-    }, [user, eventId]);
-
-    // Save color to Firebase
-    const handleColorSelect = async (color: string) => {
-        setSelectedColor(color);
-        setShowMenu(false);
-
-        if (user && eventId) {
-            await setDoc(doc(db, "users", user.uid, "events", eventId), { color }, { merge: true });
+        } catch (error) {
+            console.error("Error fetching color:", error);
         }
+    }, [user, eventId, onColorChange]);
+
+    // Only fetch color once when component mounts
+    useEffect(() => {
+        // Only fetch if we're editing an existing event
+        if (eventId) {
+            fetchColor();
+        }
+    }, [eventId, fetchColor]);
+
+    const handleColorSelect = (color: string) => {
+        onColorChange(color);
+        setShowMenu(false);
     };
 
     return (
