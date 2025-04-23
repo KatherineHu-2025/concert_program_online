@@ -1,20 +1,57 @@
 /* NavBar.module.css */
 
 .navbar {
-    width: 250px;
-    height: 100vh;
-    background-color: rgba(59, 60, 80, 1);
+    width: 240px;
+    background-color: #3B3C50;
+    min-height: 100vh;
+    padding: 2rem;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding-top: 20px;
-    padding-left: 20px;
-    font-family: 'Lora';
-/*     position: fixed; 
-    left: 0;
-    top: 0; */
+    font-family: 'Lora', serif;
 }
 
+.logo {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-family: 'Lora', serif;
+}
+
+.navContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    font-family: 'Lora', serif;
+}
+
+.navItem:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
 
 .interactiveConcertProgramContainer {
     width: 100%;
@@ -24,14 +61,15 @@
     line-height: 1.2;
     font-weight: 300;
     margin-left: 10px;
-    color:rgba(254, 251, 244, 1);
+    color: rgba(254, 251, 244, 1);
+    font-family: 'Lora', serif;
 }
 
 .databaseParent {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: relative; /* Needed for active bar positioning */
+    position: relative;
     width: 100%;
 }
 
@@ -43,7 +81,7 @@
     cursor: pointer;
     color: rgba(222, 221, 237, 1);
     transition: font-weight 0.2s;
-    font-family: 'Lora', serif !important;
+    font-family: 'Lora', serif;
 }
 
 .dashboardText, .databaseText {
@@ -51,14 +89,13 @@
     font-weight: normal;
 }
 
-
 .activeButton .dashboardText,
 .activeButton .databaseText {
-    font-weight: bold; /* Bold text for the active button */
+    font-weight: bold;
     color: rgba(222, 221, 237, 1);
 }
 
-.icon, .server02Icon {
+.server02Icon {
     width: 24px;
     height: 24px;
     transition: filter 0.2s;
@@ -70,10 +107,9 @@
     right: 0;
     width: 4px;
     height: 36px;
-   /* left: 190px; /* Adjust this value to move it left */
     background-color: rgba(116, 114, 179, 1);
     border-radius: 25px;
-    transition: transform 0.3s ease; /* Smooth sliding animation */
+    transition: transform 0.3s ease;
     transform: translateY(-50%);
 }
 
@@ -85,10 +121,8 @@
     font-size: 16px;
     color: rgba(254, 251, 244, 1);
     cursor: pointer;
-    font-family: 'Lora';
+    font-family: 'Lora', serif;
 }
-
-
 
 /* Avatar styling */
 .avatar {
@@ -99,22 +133,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px; /* Adjust font size for initials */
+    font-size: 20px;
     font-weight: bold;
-    color: #3B3C50; /* Contrast text color */
+    color: #3B3C50;
     text-transform: uppercase;
     margin-right: 10px;
-    object-fit: cover; /* Ensures the avatar image fits well */
+    object-fit: cover;
+    font-family: 'Lora', serif;
 }
 
 /* Username styling when the user is logged in */
 .userName {
     font-size: 16px;
     color: rgba(254, 251, 244, 1);
-    font-family: 'Lora';
+    font-family: 'Lora', serif;
 }
 .userName:hover {
-    color:rgba(116, 114, 179, 1);
+    color: rgba(116, 114, 179, 1);
 }
 
 /* Sign Up text styling for when no user is logged in */
@@ -122,5 +157,5 @@
     font-size: 16px;
     color: rgba(254, 251, 244, 1);
     cursor: pointer;
-    font-family: 'Lora';
+    font-family: 'Lora', serif;
 }

@@ -1,19 +1,119 @@
 .container {
-    display: flex;
-    height: 100vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
+  display: flex;
+  height: 100%;  /* Changed from min-height: 100vh */
+  background-color: #fff;
+  position: relative;
+  width: 100%;
 }
 
-.imageContainer {
-    flex: 1; /* Takes the remaining space after NavBar */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative; /* Needed for fullscreen image positioning */
+.mainContent {
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
 }
 
-.fullscreenImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image scales to fill the space */
+.title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
 }
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem; /* Added to ensure space at bottom */
+}
+
+.section {
+  background-color: #faf6f3;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: calc((100vh - 300px) / 2); /* Adjusted height to fit viewport */
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.searchContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: #fff;
+  width: 200px;
+}
+
+.moreButton {
+  background-color: #f0e6e0;
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.tableContainer {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  background-color: #faf6f3;
+  color: #666;
+  font-weight: normal;
+  z-index: 1;
+}
+
+.table td {
+  color: #333;
+}
+
+/* Custom scrollbar styles */
+.tableContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+} 
