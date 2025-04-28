@@ -10,13 +10,35 @@ import { db } from '../../../firebaseConfig';
 import { auth } from '../../../firebaseConfig';
 import Image from "next/image"
 import ColorCircle from '@/components/ColorCircle';
+import {DragDropContext,Droppable,Draggable,DropResult,} from '@hello-pangea/dnd';
 
+interface ProgramItem {
+    id: string;
+    composer: string;
+    piece: string;
+    notes: string;
+    duration: string;
+    isIntermission: boolean;
+}
 
 const AddEventForm = () => {
     const router = useRouter();
     const { eventId } = useParams();
 
-    const [programs, setPrograms] = useState([{ composer: '', piece: '', notes: '' }]);
+    const initialPrograms = [{
+        id: 'program-1',
+        composer: '',
+        piece: '',
+        notes: '',
+        duration: '',
+        isIntermission: false,
+      }];
+
+    // Add a ref to keep track of the next program ID
+    const [programs, setPrograms] = useState<ProgramItem[]>(initialPrograms);
+    // nextProgramId.current will now === 2
+    const nextProgramId = React.useRef(initialPrograms.length + 1);
+
     const [performers, setPerformer] = useState([{ name: '', role: '', bio: '' }]);
     const [heading, setHeading] = useState("Input your title here...");
     const [isEditingHeading, setIsEditingHeading] = useState(false);
@@ -35,12 +57,18 @@ const AddEventForm = () => {
     const [performanceGroupSuggestions, setPerformanceGroupSuggestions] = useState<Array<{name: string, bio: string}>>([]);
     const [showPerformanceGroupSuggestions, setShowPerformanceGroupSuggestions] = useState(false);
 
+    // Function to get the next program ID
+    const getNextProgramId = () => {
+        const id = `program-${nextProgramId.current}`;
+        nextProgramId.current += 1;
+        return id;
+      };
+
     // Fetch event data if editing an existing event
     useEffect(() => {
         const fetchEventData = async () => {
             const user = auth.currentUser;
             
-    
             if (!user) {
                 alert("You need to be logged in to edit an event.");
                 return;
@@ -48,20 +76,38 @@ const AddEventForm = () => {
     
             if (eventId) {
                 try {
-                    // Get the event document reference
                     const eventDocRef = doc(db, "users", user.uid, "events", eventId as string);
                     const eventDoc = await getDoc(eventDocRef);
     
                     if (eventDoc.exists()) {
                         const data = eventDoc.data();
-    
-                        // Set the state values based on the retrieved data
+                        
+                        // Handle programs with proper IDs
+                        if (data.programs && data.programs.length > 0) {
+                            const programsWithIds = data.programs.map((prog: ProgramItem, index: number) => ({
+                                ...prog,
+                                id: `program-${index + 1}`
+                            }));
+                            setPrograms(programsWithIds);
+                            nextProgramId.current = programsWithIds.length + 1;
+                        } else {
+                            setPrograms([{ 
+                                id: 'program-1',
+                                composer: '', 
+                                piece: '', 
+                                notes: '', 
+                                duration: '',
+                                isIntermission: false 
+                            }]);
+                            nextProgramId.current = 2;
+                        }
+
+                        // Set other form data
                         setHeading(data.title || "Input your title here...");
                         setEventDate(data.date.toDate().toLocaleString('sv-SE').slice(0, 16));
                         setLocation(data.location || "");
                         setConcertType(data.concertType || "");
                         setColor(data.color || "#FFFFFF");
-                        setPrograms(data.programs || [{ composer: "", piece: "", notes: "" }]);
                         setPerformer(data.performers || [{ name: "", role: "", bio: "" }]);
                         setIsPerformanceGroup(!!data.performanceGroup);
                         setPerformanceGroupName(data.performanceGroup || "");
@@ -204,6 +250,12 @@ const AddEventForm = () => {
         setShowPerformanceGroupSuggestions(false);
     };
 
+    // Function to format concert type (first letter capital, rest lowercase)
+    const formatConcertType = (type: string) => {
+        if (!type) return '';
+        return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
@@ -225,6 +277,9 @@ const AddEventForm = () => {
             return;
         }
 
+        // Format concert type
+        const formattedConcertType = formatConcertType(concertType);
+
         // **Clean Up Unused Data Before Submission**
         const filteredPrograms = programs.filter(
             (p) => p.composer.trim() || p.piece.trim() || p.notes.trim()
@@ -242,7 +297,7 @@ const AddEventForm = () => {
             title: heading,
             date: Timestamp.fromDate(new Date(eventDate)),
             location,
-            concertType,
+            concertType: formattedConcertType,
             color,
             programs: filteredPrograms,
             performers: filteredPerformers,
@@ -295,7 +350,14 @@ const AddEventForm = () => {
             setEventDate('');
             setLocation('');
             setConcertType('');
-            setPrograms([{ composer: '', piece: '', notes: '' }]);
+            setPrograms([{ 
+                id: 'program-1',
+                composer: '', 
+                piece: '', 
+                notes: '', 
+                duration: '',
+                isIntermission: false 
+            }]);
             setPerformer([{ name: '', role: '', bio: '' }]);
             setIsPerformanceGroup(false);
             setPerformanceGroupName('');
@@ -364,13 +426,57 @@ const AddEventForm = () => {
         setIsPerformanceGroup(!isPerformanceGroup);
     };
 
-    // Function to handle adding a new program piece
-    const handleAddProgram = () => {
-        setPrograms([...programs, { composer: '', piece: '', notes: '' }]);
+    // Function to calculate total duration
+    const calculateTotalDuration = (items: ProgramItem[]) => {
+        let totalMinutes = 0;
+        items.forEach(item => {
+            if (item.duration) {
+                const [hours, minutes] = item.duration.split(':').map(Number);
+                totalMinutes += (hours * 60) + minutes;
+            }
+        });
+        
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     };
 
-    const handleAddPerformer = () => {
-        setPerformer([...performers, { name: '', role: '', bio: '' }]);
+    // Function to handle drag and drop
+    const onDragEnd = (result: DropResult) => {
+        if (!result.destination) return;
+      
+        const items = Array.from(programs);
+        const [moved] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, moved);
+      
+        // don't touch item.id – let it stay what it was
+        setPrograms(items);
+      };
+
+    // Function to add a new program piece
+    const handleAddProgram = () => {
+        const newProgram = { 
+            id: getNextProgramId(),
+            composer: '', 
+            piece: '', 
+            notes: '', 
+            duration: '',
+            isIntermission: false 
+        };
+        setPrograms(prev => [...prev, newProgram]);
+    };
+
+    // Function to add an intermission
+    const handleAddIntermission = () => {
+        const newIntermission = { 
+            id: getNextProgramId(),
+            composer: '', 
+            piece: 'Intermission', 
+            notes: '', 
+            duration: '00:15',
+            isIntermission: true 
+        };
+        setPrograms(prev => [...prev, newIntermission]);
     };
 
     const handleProgramChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -401,292 +507,398 @@ const AddEventForm = () => {
         setColor(newColor);
     };
 
+    // Add this handler in the component
+    const handleDeleteProgram = (index: number) => {
+        setPrograms(prev => prev.filter((_, i) => i !== index));
+    };
+
     return (
-        <div className={styles.container}>
-            <NavBar />
-            <div className={styles.formContent}>
-                <button onClick={() => window.history.back()} className={styles.backButton}>
-                    <Image src="/arrow-left.svg" alt="Back" width={24} height={24} className={styles.icon} />
-                </button>
-                <p className={styles.path}>Dashboard / New Event</p>
-                <div className={styles.titleRow}>
-                    {isEditingHeading ? (
-                        <input
-                            type="text"
-                            value={heading}
-                            onChange={handleHeadingChange}
-                            onBlur={handleHeadingBlurOrEnter}
-                            onKeyDown={handleHeadingBlurOrEnter}
-                            autoFocus
-                            className={styles.editableHeadingInput}
-                        />
-                    ) : (
-                        <h2 className={styles.heading} onClick={toggleEditHeading}>{heading}</h2>
-                    )}
-                    <span className={styles.asterisk}>*</span>
-                </div>
-                
-                <form className={styles.form} onSubmit={handleSubmit}>
-                    <div className={styles.secondHeader}>Basic Information</div>
-
-                    <label>Time
+        <DragDropContext onDragEnd={onDragEnd}>
+            <div className={styles.container}>
+                <NavBar />
+                <div className={styles.formContent}>
+                    <button onClick={() => window.history.back()} className={styles.backButton}>
+                        <Image src="/arrow-left.svg" alt="Back" width={24} height={24} className={styles.icon} />
+                    </button>
+                    <p className={styles.path}>Dashboard / New Event</p>
+                    <div className={styles.titleRow}>
+                        {isEditingHeading ? (
+                            <input
+                                type="text"
+                                value={heading}
+                                onChange={handleHeadingChange}
+                                onBlur={handleHeadingBlurOrEnter}
+                                onKeyDown={handleHeadingBlurOrEnter}
+                                autoFocus
+                                className={styles.editableHeadingInput}
+                            />
+                        ) : (
+                            <h2 className={styles.heading} onClick={toggleEditHeading}>{heading}</h2>
+                        )}
                         <span className={styles.asterisk}>*</span>
-                    </label>
-                    <div className={styles.inputWrapper}>
-                        <input
-                            type="datetime-local"
-                            name="time"
-                            value={eventDate}
-                            onChange={(e) => setEventDate(e.target.value)}
-                            required
-                        />
                     </div>
-
-                    <label>Location 
-                        <span className={styles.asterisk}>*</span>
-                    </label>
-                    <div className={styles.inputWrapper}>
-                        <input
-                            type="text"
-                            name="location"
-                            placeholder="Text"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <label>Concert Type 
-                        <span className={styles.asterisk}>*</span>
-                    </label>
-                    <div className={styles.colorWrappers}>
-                        <select
-                            name="concertType"
-                            value={concertType}
-                            onChange={(e) => setConcertType(e.target.value)}
-                            required
-                        >
-                            <option value="">Select item</option>
-                            <option value="Recital">Recital</option>
-                            <option value="Symphony">Symphony</option>
-                            <option value="Chamber">Chamber</option>
-                        </select>
-                        <ColorCircle 
-                            eventId={eventId as string}
-                            selectedColor={color}
-                            onColorChange={handleColorChange}
-                        />
-                    </div>
-
-                    <div className={styles.secondHeader}>Performer(s) and Conductor(s)</div>
-                    <div className={styles.checkboxGroup}>
-                        <input
-                            type="checkbox"
-                            name="performerGroup"
-                            onChange={handleCheckboxChange}
-                            checked={isPerformanceGroup}
-                        />
-                        <label>Performance Group</label>
-                    </div>
-
-                    {/* Conditionally render the Performance Group input field */}
-                    {isPerformanceGroup && (
-                        <>
-                            <div className={styles.inputWithSuggestions}>
-                                <input
-                                    type="text"
-                                    name="performanceGroupName"
-                                    placeholder="Performance Group Name"
-                                    value={performanceGroupName}
-                                    onChange={handlePerformanceGroupNameChange}
-                                    className={styles.performanceGroupInput}
-                                />
-                                {showPerformanceGroupSuggestions && performanceGroupName && performanceGroupSuggestions.length > 0 && (
-                                    <div className={styles.suggestions}>
-                                        {performanceGroupSuggestions.map((suggestion, i) => (
-                                            <div
-                                                key={i}
-                                                className={styles.suggestionItem}
-                                                onClick={() => handleSelectPerformanceGroupSuggestion(suggestion)}
-                                            >
-                                                {suggestion.name}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                            <div className={styles.programNotesContainer}>
-                                <label>Performance Group Bio</label>
-                                <textarea
-                                    value={performanceGroupBio}
-                                    onChange={(e) => setPerformanceGroupBio(e.target.value)}
-                                    placeholder="Enter performance group biography..."
-                                    className={styles.programNotesInput}
-                                />
-                            </div>
-                        </>
-                    )}
-
-                    <div className={styles.titleWithLabel}>
-                        <label>Additional Performer</label>
-                        <Image 
-                            src="/plus-circle.svg" 
-                            alt="Add Performer" 
-                            width={20} 
-                            height={20} 
-                            className={styles.plusIcon} 
-                            onClick={handleAddPerformer}
-                        />
-                    </div>
-
                     
-                    {performers.map((performer, index) => (
-                        <div key={index} className={styles.program}>
-                            <div className={styles.additionalPerformer}>
+                    <form className={styles.form} onSubmit={handleSubmit}>
+                        <div className={styles.secondHeader}>Basic Information</div>
+
+                        <label>Time
+                            <span className={styles.asterisk}>*</span>
+                        </label>
+                        <div className={styles.inputWrapper}>
+                            <input
+                                type="datetime-local"
+                                name="time"
+                                value={eventDate}
+                                onChange={(e) => setEventDate(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <label>Location 
+                            <span className={styles.asterisk}>*</span>
+                        </label>
+                        <div className={styles.inputWrapper}>
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="Text"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <label>Concert Type 
+                            <span className={styles.asterisk}>*</span>
+                        </label>
+                        <div className={styles.colorWrappers}>
+                            <input
+                                type="text"
+                                name="concertType"
+                                placeholder="Enter concert type"
+                                value={concertType}
+                                onChange={(e) => setConcertType(e.target.value)}
+                                required
+                                className={styles.concertTypeInput}
+                            />
+                            <ColorCircle 
+                                eventId={eventId as string}
+                                selectedColor={color}
+                                onColorChange={handleColorChange}
+                            />
+                        </div>
+
+                        <div className={styles.secondHeader}>Performer(s) and Conductor(s)</div>
+                        <div className={styles.checkboxGroup}>
+                            <input
+                                type="checkbox"
+                                name="performerGroup"
+                                onChange={handleCheckboxChange}
+                                checked={isPerformanceGroup}
+                            />
+                            <label>Performance Group</label>
+                        </div>
+
+                        {/* Conditionally render the Performance Group input field */}
+                        {isPerformanceGroup && (
+                            <>
                                 <div className={styles.inputWithSuggestions}>
                                     <input
                                         type="text"
-                                        name="name"
-                                        placeholder="Performer Name"
-                                        value={performer.name}
-                                        onChange={(e) => handlePerformerChange(index, e)}
+                                        name="performanceGroupName"
+                                        placeholder="Performance Group Name"
+                                        value={performanceGroupName}
+                                        onChange={handlePerformanceGroupNameChange}
+                                        className={styles.performanceGroupInput}
                                     />
-                                    {showSuggestions && performer.name && performerSuggestions.length > 0 && (
+                                    {showPerformanceGroupSuggestions && performanceGroupName && performanceGroupSuggestions.length > 0 && (
                                         <div className={styles.suggestions}>
-                                            {performerSuggestions.map((suggestion, i) => (
+                                            {performanceGroupSuggestions.map((suggestion, i) => (
                                                 <div
                                                     key={i}
                                                     className={styles.suggestionItem}
-                                                    onClick={() => handleSelectSuggestion(index, suggestion)}
+                                                    onClick={() => handleSelectPerformanceGroupSuggestion(suggestion)}
                                                 >
-                                                    {suggestion.name} - {suggestion.role}
+                                                    {suggestion.name}
                                                 </div>
                                             ))}
                                         </div>
                                     )}
                                 </div>
-                                <input
-                                    type="text"
-                                    name="role"
-                                    placeholder="Performer Role"
-                                    value={performer.role}
-                                    onChange={(e) => handlePerformerChange(index, e)}
-                                />
-                            </div>
-                            <div className={styles.programNotesContainer}>
-                                <label>Performer Bio</label>
-                                <textarea
-                                    name="bio"
-                                    placeholder="Enter performer biography..."
-                                    value={performer.bio}
-                                    onChange={(e) => handlePerformerChange(index, e)}
-                                    className={styles.programNotesInput}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                    
-                    <div className={styles.titleWithLabel}>
-                        <div className={styles.secondHeader}>Program</div>
-                        <Image 
-                            src="/plus-circle.svg" 
-                            alt="Add Piece" 
-                            width={20} 
-                            height={20} 
-                            className={styles.plusIcon} 
-                            onClick={handleAddProgram}
-                        />
-                    </div>
-                    
-                    {programs.map((program, index) => (
-                        <div key={index} className={styles.program}>
-                            <div className = {styles.composerAndPiece}>
-                                <div className = {styles.inputGroup}>
-                                    <label>Composer</label>
-                                    <input
-                                        type="text"
-                                        name="composer"
-                                        placeholder={`Composer Name`}
-                                        value={program.composer}
-                                        onChange={(e) => handleProgramChange(index, e)}
-                                    />
-                                </div>
-                                <div className = {styles.inputGroup}>
-                                    <label>Piece</label>
-                                    <input
-                                        type="text"
-                                        name="piece"
-                                        placeholder={`Piece Name`}
-                                        value={program.piece}
-                                        className={styles.piece} 
-                                        onChange={(e) => handleProgramChange(index, e)}
-                                    />
-                                </div>
-                            </div>
-                            
-                            
-                            
-                            <div className={styles.programNotesContainer}>
-                                <label>Program Notes</label>
-                                <div className = {styles.programNotesWrapper}>
+                                <div className={styles.programNotesContainer}>
+                                    <label>Performance Group Bio</label>
                                     <textarea
-                                        name="notes"
-                                        placeholder={`Write your own program notes or generate using AI! Please remember to check the validity of AI.`}
-                                        value={program.notes}
-                                        onChange={(e) => handleProgramChange(index, e)}
+                                        value={performanceGroupBio}
+                                        onChange={(e) => setPerformanceGroupBio(e.target.value)}
+                                        placeholder="Enter performance group biography..."
                                         className={styles.programNotesInput}
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={() => handleGenerateNotes(index)}
-                                        className={`${styles.generateNotesButton} ${loadingIndex === index ? styles.disabledButton : ''}`}
-                                        disabled={loadingIndex === index} // Disable the button when loading
-                                    >
-                                        {loadingIndex === index ? (
-                                            <div className={styles.loader}></div> // Show loading spinner when API is pending
-                                        ) : (
-                                            <Image src="/AI.svg" alt="Generate Notes" width={24} height={24} />
+                                </div>
+                            </>
+                        )}
+
+                        <div className={styles.titleWithLabel}>
+                            <label>Additional Performer</label>
+                            <Image 
+                                src="/plus-circle.svg" 
+                                alt="Add Performer" 
+                                width={20} 
+                                height={20} 
+                                className={styles.plusIcon} 
+                                onClick={() => setPerformer([...performers, { name: '', role: '', bio: '' }])}
+                            />
+                        </div>
+
+                        
+                        {performers.map((performer, index) => (
+                            <div key={index} className={styles.program}>
+                                <div className={styles.additionalPerformer}>
+                                    <div className={styles.inputWithSuggestions}>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            placeholder="Performer Name"
+                                            value={performer.name}
+                                            onChange={(e) => handlePerformerChange(index, e)}
+                                        />
+                                        {showSuggestions && performer.name && performerSuggestions.length > 0 && (
+                                            <div className={styles.suggestions}>
+                                                {performerSuggestions.map((suggestion, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className={styles.suggestionItem}
+                                                        onClick={() => handleSelectSuggestion(index, suggestion)}
+                                                    >
+                                                        {suggestion.name} - {suggestion.role}
+                                                    </div>
+                                                ))}
+                                            </div>
                                         )}
-                                    </button>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="role"
+                                        placeholder="Performer Role"
+                                        value={performer.role}
+                                        onChange={(e) => handlePerformerChange(index, e)}
+                                    />
+                                </div>
+                                <div className={styles.programNotesContainer}>
+                                    <label>Performer Bio</label>
+                                    <textarea
+                                        name="bio"
+                                        placeholder="Enter performer biography..."
+                                        value={performer.bio}
+                                        onChange={(e) => handlePerformerChange(index, e)}
+                                        className={styles.programNotesInput}
+                                    />
                                 </div>
                             </div>
+                        ))}
+                        
+                        <div className={styles.titleWithLabel}>
+                            <div className={styles.secondHeader}>Program</div>
+                            <div className={styles.programActions}>
+                                <Image 
+                                    src="/plus-circle.svg" 
+                                    alt="Add Piece" 
+                                    width={20} 
+                                    height={20} 
+                                    className={styles.plusIcon} 
+                                    onClick={handleAddProgram}
+                                />
+                                <Image 
+                                    src="/clock.svg" 
+                                    alt="Add Intermission" 
+                                    width={20} 
+                                    height={20} 
+                                    className={styles.plusIcon} 
+                                    onClick={handleAddIntermission}
+                                />
+                            </div>
                         </div>
-                    ))}
+                        
+                        <Droppable 
+                            droppableId="programs"
+                            isDropDisabled={false}
+                            isCombineEnabled={false}
+                            ignoreContainerClipping={false}
+                            type="DEFAULT"
+                        >
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className={styles.programList}
+                                >
+                                    {programs.map((program, index) => (
+                                        <Draggable 
+                                            key={program.id}
+                                            draggableId={program.id}
+                                            index={index}
+                                        >
+                                            {(provided) => (
+                                                program.isIntermission ? (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        className={styles.intermissionBanner}
+                                                    >
+                                                        <span>Intermission</span>
+                                                        <input
+                                                            type="time"
+                                                            name="duration"
+                                                            value={program.duration}
+                                                            onChange={e => handleProgramChange(index, e)}
+                                                            className={styles.intermissionDurationInput}
+                                                            required
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            className={styles.deleteButton}
+                                                            onClick={() => handleDeleteProgram(index)}
+                                                            aria-label="Delete Intermission"
+                                                        >
+                                                            <Image src="/close.svg" alt="Delete" width={20} height={20} />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        className={styles.program}
+                                                    >
+                                                        <div className={styles.programHeader}>
+                                                            <div {...provided.dragHandleProps}>
+                                                                <Image 
+                                                                    src="/drag-handle.svg" 
+                                                                    alt="Drag" 
+                                                                    width={20} 
+                                                                    height={20} 
+                                                                    className={styles.dragHandle}
+                                                                />
+                                                            </div>
+                                                            <div className={styles.durationInput}>
+                                                                <label>Duration</label>
+                                                                <input
+                                                                    type="time"
+                                                                    name="duration"
+                                                                    value={program.duration}
+                                                                    onChange={e => handleProgramChange(index, e)}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                className={styles.deleteButton}
+                                                                onClick={() => handleDeleteProgram(index)}
+                                                                aria-label="Delete Program"
+                                                            >
+                                                                <Image src="/close.svg" alt="Delete" width={20} height={20} />
+                                                            </button>
+                                                        </div>
+                                                        <div className={styles.composerAndPiece}>
+                                                            <div className={styles.inputGroup}>
+                                                                <label>Composer</label>
+                                                                <input
+                                                                    type="text"
+                                                                    name="composer"
+                                                                    placeholder={`Composer Name`}
+                                                                    value={program.composer}
+                                                                    onChange={(e) => handleProgramChange(index, e)}
+                                                                    disabled={program.isIntermission}
+                                                                />
+                                                            </div>
+                                                            <div className={styles.inputGroup}>
+                                                                <label>Piece</label>
+                                                                <input
+                                                                    type="text"
+                                                                    name="piece"
+                                                                    placeholder={`Piece Name`}
+                                                                    value={program.piece}
+                                                                    className={styles.piece} 
+                                                                    onChange={(e) => handleProgramChange(index, e)}
+                                                                    disabled={program.isIntermission}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.programNotesContainer}>
+                                                            <label>Program Notes</label>
+                                                            <div className={styles.programNotesWrapper}>
+                                                                <textarea
+                                                                    name="notes"
+                                                                    placeholder={`Write your own program notes or generate using AI! Please remember to check the validity of AI.`}
+                                                                    value={program.notes}
+                                                                    onChange={(e) => handleProgramChange(index, e)}
+                                                                    className={styles.programNotesInput}
+                                                                    disabled={program.isIntermission}
+                                                                />
+                                                                {!program.isIntermission && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => handleGenerateNotes(index)}
+                                                                        className={`${styles.generateNotesButton} ${loadingIndex === index ? styles.disabledButton : ''}`}
+                                                                        disabled={loadingIndex === index}
+                                                                    >
+                                                                        {loadingIndex === index ? (
+                                                                            <div className={styles.loader}></div>
+                                                                        ) : (
+                                                                            <Image src="/AI.svg" alt="Generate Notes" width={24} height={24} />
+                                                                        )}
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                        <div className={styles.totalDuration}>
+                            <label>Total Duration:</label>
+                            <span>{calculateTotalDuration(programs)}</span>
+                        </div>
 
-                    <div className={styles.secondHeader}>Sponsors</div>
-                    <div className={styles.programNotesContainer}>
-                        <textarea
-                            placeholder="Enter sponsor information here..."
-                            value={sponsorText}
-                            onChange={(e) => setSponsorText(e.target.value)}
-                            className={styles.programNotesInput}
-                        />
-                    </div>
-
-                    <div className={styles.secondHeader}>Custom Sections</div>
-                    {customSections.map((section, index) => (
-                        <div key={index} className={styles.customSection}>
-                            <input
-                                type="text"
-                                placeholder={`Section Title ${index + 1}`}
-                                value={section.title}
-                                onChange={(e) => handleCustomSectionChange(index, 'title', e.target.value)}
-                                className={styles.customSectionTitleInput}
-                            />
+                        <div className={styles.secondHeader}>Sponsors</div>
+                        <div className={styles.programNotesContainer}>
                             <textarea
-                                placeholder={`Section Content ${index + 1}`}
-                                value={section.content}
-                                onChange={(e) => handleCustomSectionChange(index, 'content', e.target.value)}
-                                className={styles.customSectionContentInput}
+                                placeholder="Enter sponsor information here..."
+                                value={sponsorText}
+                                onChange={(e) => setSponsorText(e.target.value)}
+                                className={styles.programNotesInput}
                             />
                         </div>
-                    ))}
-                    <button type="button" className={styles.addButton} onClick={handleAddSection}>Add a Section</button>
 
-                    <button type="submit" className={styles.submitButton}>{eventId ? "Update Event" : "Add Event"}</button>
-                </form>
+                        <div className={styles.secondHeader}>Custom Sections</div>
+                        {customSections.map((section, index) => (
+                            <div key={index} className={styles.customSection}>
+                                <input
+                                    type="text"
+                                    placeholder={`Section Title ${index + 1}`}
+                                    value={section.title}
+                                    onChange={(e) => handleCustomSectionChange(index, 'title', e.target.value)}
+                                    className={styles.customSectionTitleInput}
+                                />
+                                <textarea
+                                    placeholder={`Section Content ${index + 1}`}
+                                    value={section.content}
+                                    onChange={(e) => handleCustomSectionChange(index, 'content', e.target.value)}
+                                    className={styles.customSectionContentInput}
+                                />
+                            </div>
+                        ))}
+                        <button type="button" className={styles.addButton} onClick={handleAddSection}>Add a Section</button>
+
+                        <button type="submit" className={styles.submitButton}>{eventId ? "Update Event" : "Add Event"}</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </DragDropContext>
     );
 };
 

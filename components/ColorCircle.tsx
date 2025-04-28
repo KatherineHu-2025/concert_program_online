@@ -32,11 +32,12 @@ const ColorCircle: React.FC<ColorCircleProps> = ({ eventId, selectedColor, onCol
 
     // Only fetch color once when component mounts
     useEffect(() => {
-        // Only fetch if we're editing an existing event
-        if (eventId) {
+        // Only fetch if we're editing an existing event and the color is still default
+        if (eventId && selectedColor === '#FFFFFF') {
             fetchColor();
         }
-    }, [eventId, fetchColor]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleColorSelect = (color: string) => {
         onColorChange(color);

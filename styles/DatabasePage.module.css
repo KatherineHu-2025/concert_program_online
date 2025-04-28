@@ -8,6 +8,7 @@
 
 .mainContent {
   flex: 1;
+  padding: 40px 32px;  /* Added specific padding */
   overflow-y: auto;
   width: 100%;
 }
@@ -16,6 +17,7 @@
   font-size: 2rem;
   margin-bottom: 2rem;
   color: #333;
+  margin-left: 20px;  /* Added left margin for title */
 }
 
 .gridContainer {
@@ -30,7 +32,7 @@
   background-color: #faf6f3;
   border-radius: 12px;
   padding: 1.5rem;
-  height: calc((100vh - 300px) / 2); /* Adjusted height to fit viewport */
+  height: calc((100vh - 230px) / 2); /* Adjusted height to fit viewport */
   display: flex;
   flex-direction: column;
 }
@@ -39,7 +41,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .sectionTitle {
