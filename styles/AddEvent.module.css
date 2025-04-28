@@ -152,6 +152,11 @@
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .colorWrappers{
@@ -160,8 +165,14 @@
     gap: 2rem;
 }
 
-.colorWrappers select{
+.colorWrappers select,
+.colorWrappers .concertTypeInput {
     width: 500px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
 }
 
 .addButton {
@@ -326,4 +337,121 @@
 
 .suggestionItem:last-child {
     border-bottom: none;
+}
+
+.programList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.programHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.dragHandle {
+    cursor: grab;
+}
+
+.dragHandle:active {
+    cursor: grabbing;
+}
+
+.durationInput {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.durationInput input {
+    width: 120px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+.programActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.totalDuration {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.totalDuration label {
+    font-weight: bold;
+    color: #7472B3;
+}
+
+.totalDuration span {
+    font-size: 1.2rem;
+    color: #7472B3;
+}
+
+.program[data-rbd-draggable-context-id] {
+    cursor: grab;
+}
+
+.program[data-rbd-draggable-context-id]:active {
+    cursor: grabbing;
+}
+
+.intermissionBanner {
+    width: 100%;
+    background: linear-gradient(90deg, #DEDDED 0%, #B3B2E6 100%);
+    color: #7472B3;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    gap: 2rem;
+    position: relative;
+}
+
+.intermissionDurationInput {
+    font-size: 1.1rem;
+    font-weight: bold;
+    width: 100px;
+    text-align: center;
+    border: 1px solid #b3b2e6;
+    border-radius: 5px;
+    background: #fff;
+    margin-left: 1rem;
+    padding: 0.5rem 0.5rem;
+}
+
+.deleteButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: filter 0.2s;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    margin: 0;
+    z-index: 2;
+}
+.deleteButton:hover {
+    filter: brightness(0.8);
 }
