@@ -710,8 +710,8 @@ const AddEventForm = () => {
                                 <Image 
                                     src="/clock.svg" 
                                     alt="Add Intermission" 
-                                    width={20} 
-                                    height={20} 
+                                    width={24} 
+                                    height={24} 
                                     className={styles.plusIcon} 
                                     onClick={handleAddIntermission}
                                 />
@@ -753,6 +753,8 @@ const AddEventForm = () => {
                                                             onChange={e => handleProgramChange(index, e)}
                                                             className={styles.intermissionDurationInput}
                                                             required
+                                                            placeholder="hh:mm"
+                                                            title="Hours:Minutes"
                                                         />
                                                         <button
                                                             type="button"
@@ -787,6 +789,8 @@ const AddEventForm = () => {
                                                                     value={program.duration}
                                                                     onChange={e => handleProgramChange(index, e)}
                                                                     required
+                                                                    placeholder="hh:mm"
+                                                                    title="Hours:Minutes"
                                                                 />
                                                             </div>
                                                             <button

@@ -455,3 +455,10 @@
 .deleteButton:hover {
     filter: brightness(0.8);
 }
+
+.program label,
+.durationInput label,
+.programNotesContainer label {
+    color: #7472B3;
+    font-weight: 600;
+}
