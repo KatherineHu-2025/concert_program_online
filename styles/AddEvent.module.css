@@ -558,3 +558,8 @@
 .icon {
     filter: brightness(0) saturate(100%) invert(23%) sepia(11%) saturate(1144%) hue-rotate(201deg) brightness(94%) contrast(87%);
 }
+
+.programNotesContainer label {
+    color: #DEDDED;
+    font-weight: 600;
+}
