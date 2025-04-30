@@ -14,11 +14,19 @@
 .backButton {
     background: none;
     border: none;
-    color: #fff;
+    color: #DEDDED;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin: 0;
+    padding: 0;
     cursor: pointer;
     align-self: flex-start;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.backButton img {
+    filter: brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(368%) hue-rotate(202deg) brightness(97%) contrast(93%);
 }
 
 /* Title and Upload Row */
@@ -42,26 +50,24 @@
     width: 60%; /* Full width to center the text */
 }
 
+.editableHeadingInput::placeholder {
+    color: #DEDDED;
+    opacity: 0.8;
+    font-style: italic;
+    font-weight: normal;
+}
+
 .formContent {
     flex: 7;
-    flex-grow: 1; /* Allow form content to take up the remaining space */
-    padding: 40px;
+    flex-grow: 1;
+    padding: 40px 40px 40px 60px; /* Increased left padding to account for absolute positioned back button */
     background-color: #7472B3;
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Ensure content is scrollable if necessary */
+    overflow-y: auto;
+    position: relative; /* Added to establish positioning context for back button */
 }
 
-
-.backButton {
-    background: none;
-    border: none;
-    color: #4318ff;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    align-self: flex-start; /* Aligns the button to the top left */
-}
 
 .heading {
     font-size: 30px;
@@ -69,6 +75,13 @@
     color: #DEDDED;
     font-style: italic;
     margin-bottom: 1.5rem;
+    cursor: text;
+}
+
+.heading:empty::before {
+    content: "Input your title here...";
+    opacity: 0.8;
+    font-weight: normal;
 }
 
 .form {
@@ -82,10 +95,10 @@
 .form select,
 .form textarea {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 5px;
     font-size: 1rem;
-    background-color: #DEDDED;
+    background-color: #FDFBF4;
 }
 
 .form input[type="datetime-local"],
@@ -123,10 +136,6 @@
     gap: 20px;
 }
 
-.plusIcon{
-    cursor: pointer;
-}
-
 .inputGroup {
     display: flex;
     flex-direction: column;
@@ -152,10 +161,11 @@
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
-    background-color: #ffffff;
+    background-color: #FDFBF4;
     border-radius: 8px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(59, 60, 80, 0.1);
+    border: none;
     position: relative;
 }
 
@@ -169,15 +179,15 @@
 .colorWrappers .concertTypeInput {
     width: 500px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 5px;
     font-size: 1rem;
-    background-color: #ffffff;
+    background-color: #FDFBF4;
 }
 
 .addButton {
-    background-color: #DEDDED;
-    color: #7472B3;
+    background-color: #FDFBF4;
+    color: #3B3C50;
     border: none;
     padding: 8px 16px;
     border-radius: 5px;
@@ -218,7 +228,7 @@
 
 .customSectionTitleInput {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(59, 60, 80, 0.6);
     border-radius: 5px;
     font-size: 1rem;
     background-color: #ffffff;
@@ -226,7 +236,7 @@
 
 .customSectionContentInput {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(59, 60, 80, 0.6);
     border-radius: 5px;
     font-size: 1rem;
     background-color: #ffffff;
@@ -249,10 +259,10 @@
 .programNotesInput {
     flex-grow: 1;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(59, 60, 80, 0.6);
     border-radius: 5px;
     font-size: 1rem;
-    background-color: #ffffff;
+    background-color: #DEDDED;
     resize: vertical;
     min-height: 80px;
     width: 100%;
@@ -260,15 +270,18 @@
 
 .generateNotesButton {
     position: absolute;
-    bottom: 12px; /* Adjust as needed */
-    right: 18px; /* Adjust as needed */
+    bottom: 12px;
+    right: 18px;
     background: none;
     border: none;
     font-size: 1.2rem;
-    color: #2b3674;
+    color: #3B3C50;
     cursor: pointer;
 }
 
+.generateNotesButton img {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(11%) saturate(1144%) hue-rotate(201deg) brightness(94%) contrast(87%);
+}
 
 .disabledButton {
     cursor: not-allowed;     /* Disabled cursor */
@@ -276,9 +289,11 @@
 }
 
 .secondHeader {
-    color:#DEDDED;
+    color: #DEDDED;
     font-size: 20px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
 }
 
 
@@ -318,7 +333,7 @@
     left: 0;
     right: 0;
     background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(59, 60, 80, 0.4);
     border-radius: 4px;
     max-height: 200px;
     overflow-y: auto;
@@ -328,7 +343,8 @@
 .suggestionItem {
     padding: 8px 12px;
     cursor: pointer;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(59, 60, 80, 0.2);
+    color: #3B3C50;
 }
 
 .suggestionItem:hover {
@@ -361,6 +377,10 @@
     cursor: grabbing;
 }
 
+.dragHandle img {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(11%) saturate(1144%) hue-rotate(201deg) brightness(94%) contrast(87%);
+}
+
 .durationInput {
     display: flex;
     align-items: center;
@@ -368,17 +388,39 @@
 }
 
 .durationInput input {
-    width: 120px;
-    padding: 8px;
-    border: 1px solid #ccc;
+    width: 80px;
+    padding: 6px;
+    border: 1px solid rgba(59, 60, 80, 0.6);
     border-radius: 5px;
     font-size: 1rem;
-    background-color: #ffffff;
+    background-color: #DEDDED;
 }
 
 .programActions {
     display: flex;
     gap: 1rem;
+    align-items: center;
+}
+
+.actionButton {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+    opacity: 0.8;
+}
+
+.actionButton img {
+    filter: brightness(0) saturate(100%) invert(93%) sepia(8%) saturate(368%) hue-rotate(202deg) brightness(97%) contrast(93%);
+    width: 24px;
+    height: 24px;
 }
 
 .totalDuration {
@@ -386,19 +428,20 @@
     align-items: center;
     gap: 1rem;
     margin: 1rem 0;
-    padding: 0.5rem;
-    background-color: #f5f5f5;
-    border-radius: 5px;
+    padding: 1rem;
+    background-color: #FDFBF4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(59, 60, 80, 0.1);
 }
 
 .totalDuration label {
     font-weight: bold;
-    color: #7472B3;
+    color: #3B3C50;
 }
 
 .totalDuration span {
     font-size: 1.2rem;
-    color: #7472B3;
+    color: #3B3C50;
 }
 
 .program[data-rbd-draggable-context-id] {
@@ -411,8 +454,8 @@
 
 .intermissionBanner {
     width: 100%;
-    background: linear-gradient(90deg, #DEDDED 0%, #B3B2E6 100%);
-    color: #7472B3;
+    background: #FDFBF4;
+    color: #3B3C50;
     font-weight: bold;
     font-size: 1.2rem;
     display: flex;
@@ -421,7 +464,7 @@
     border-radius: 8px;
     margin: 0.5rem 0;
     padding: 1.5rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(59, 60, 80, 0.05);
     gap: 2rem;
     position: relative;
 }
@@ -429,13 +472,14 @@
 .intermissionDurationInput {
     font-size: 1.1rem;
     font-weight: bold;
-    width: 100px;
+    width: 70px;
     text-align: center;
-    border: 1px solid #b3b2e6;
+    border: 1px solid rgba(59, 60, 80, 0.6);
     border-radius: 5px;
-    background: #fff;
+    background: #DEDDED;
     margin-left: 1rem;
-    padding: 0.5rem 0.5rem;
+    padding: 4px;
+    color: #3B3C50;
 }
 
 .deleteButton {
@@ -456,9 +500,61 @@
     filter: brightness(0.8);
 }
 
+.deleteButton img {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(11%) saturate(1144%) hue-rotate(201deg) brightness(94%) contrast(87%);
+}
+
 .program label,
 .durationInput label,
 .programNotesContainer label {
-    color: #7472B3;
+    color: #3B3C50;
     font-weight: 600;
+}
+
+.inputGroup label {
+    color: #3B3C50;
+    font-weight: 600;
+}
+
+.composerAndPiece input,
+.durationInput input,
+.programNotesInput,
+.performanceGroupInput,
+.inputWithSuggestions input {
+    color: #3B3C50;
+}
+
+.program input::placeholder,
+.program textarea::placeholder,
+.inputWithSuggestions input::placeholder,
+.performanceGroupInput::placeholder,
+.programNotesInput::placeholder {
+    color: rgba(59, 60, 80, 0.6);
+}
+
+.program input[type="text"],
+.program textarea {
+    border: 1px solid rgba(59, 60, 80, 0.6);
+    background-color: #DEDDED;
+}
+
+.inputGroup input {
+    padding: 10px;
+    border: 1px solid rgba(59, 60, 80, 0.6);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #DEDDED;
+}
+
+.composerAndPiece input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(59, 60, 80, 0.6);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #DEDDED;
+}
+
+.icon {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(11%) saturate(1144%) hue-rotate(201deg) brightness(94%) contrast(87%);
 }

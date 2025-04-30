@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { auth } from "../firebaseConfig";
 
-const colors = ["#82634E", "#A5A46B", "#F2C3B3", "#733E58", "#7472B3", "#FEFBF4", "#334934"];
+const colors = ["#A5A46B", "#F9ECD9", "#DEDDED", "#F2C3B3", "#82634E", "#E0EFD8", "#7472B3"];
 
 interface ColorCircleProps {
     eventId: string;

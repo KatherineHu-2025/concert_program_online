@@ -40,7 +40,7 @@ const AddEventForm = () => {
     const nextProgramId = React.useRef(initialPrograms.length + 1);
 
     const [performers, setPerformer] = useState([{ name: '', role: '', bio: '' }]);
-    const [heading, setHeading] = useState("Input your title here...");
+    const [heading, setHeading] = useState("");
     const [isEditingHeading, setIsEditingHeading] = useState(false);
     const [isPerformanceGroup, setIsPerformanceGroup] = useState(false);
     const [performanceGroupName, setPerformanceGroupName] = useState('');
@@ -103,7 +103,7 @@ const AddEventForm = () => {
                         }
 
                         // Set other form data
-                        setHeading(data.title || "Input your title here...");
+                        setHeading(data.title || "");
                         setEventDate(data.date.toDate().toLocaleString('sv-SE').slice(0, 16));
                         setLocation(data.location || "");
                         setConcertType(data.concertType || "");
@@ -428,17 +428,17 @@ const AddEventForm = () => {
 
     // Function to calculate total duration
     const calculateTotalDuration = (items: ProgramItem[]) => {
-        let totalMinutes = 0;
+        let totalSeconds = 0;
         items.forEach(item => {
             if (item.duration) {
-                const [hours, minutes] = item.duration.split(':').map(Number);
-                totalMinutes += (hours * 60) + minutes;
+                const [minutes, seconds] = item.duration.split(':').map(Number);
+                totalSeconds += (minutes * 60) + seconds;
             }
         });
         
-        const hours = Math.floor(totalMinutes / 60);
-        const minutes = totalMinutes % 60;
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
     // Function to handle drag and drop
@@ -473,7 +473,7 @@ const AddEventForm = () => {
             composer: '', 
             piece: 'Intermission', 
             notes: '', 
-            duration: '00:15',
+            duration: '15:00',
             isIntermission: true 
         };
         setPrograms(prev => [...prev, newIntermission]);
@@ -529,11 +529,14 @@ const AddEventForm = () => {
                                 onChange={handleHeadingChange}
                                 onBlur={handleHeadingBlurOrEnter}
                                 onKeyDown={handleHeadingBlurOrEnter}
+                                placeholder="Input your title here..."
                                 autoFocus
                                 className={styles.editableHeadingInput}
                             />
                         ) : (
-                            <h2 className={styles.heading} onClick={toggleEditHeading}>{heading}</h2>
+                            <h2 className={styles.heading} onClick={toggleEditHeading}>
+                                {heading || "Input your title here..."}
+                            </h2>
                         )}
                         <span className={styles.asterisk}>*</span>
                     </div>
@@ -699,22 +702,30 @@ const AddEventForm = () => {
                         <div className={styles.titleWithLabel}>
                             <div className={styles.secondHeader}>Program</div>
                             <div className={styles.programActions}>
-                                <Image 
-                                    src="/plus-circle.svg" 
-                                    alt="Add Piece" 
-                                    width={20} 
-                                    height={20} 
-                                    className={styles.plusIcon} 
+                                <button 
+                                    className={styles.actionButton}
                                     onClick={handleAddProgram}
-                                />
-                                <Image 
-                                    src="/clock.svg" 
-                                    alt="Add Intermission" 
-                                    width={24} 
-                                    height={24} 
-                                    className={styles.plusIcon} 
+                                    type="button"
+                                >
+                                    <Image 
+                                        src="/plus-circle.svg" 
+                                        alt="Add Piece" 
+                                        width={24} 
+                                        height={24}
+                                    />
+                                </button>
+                                <button 
+                                    className={styles.actionButton}
                                     onClick={handleAddIntermission}
-                                />
+                                    type="button"
+                                >
+                                    <Image 
+                                        src="/clock.svg" 
+                                        alt="Add Intermission" 
+                                        width={24} 
+                                        height={24}
+                                    />
+                                </button>
                             </div>
                         </div>
                         
@@ -747,14 +758,15 @@ const AddEventForm = () => {
                                                     >
                                                         <span>Intermission</span>
                                                         <input
-                                                            type="time"
+                                                            type="text"
                                                             name="duration"
                                                             value={program.duration}
                                                             onChange={e => handleProgramChange(index, e)}
-                                                            className={styles.intermissionDurationInput}
                                                             required
-                                                            placeholder="hh:mm"
-                                                            title="Hours:Minutes"
+                                                            placeholder="mm:ss"
+                                                            pattern="[0-9]{2}:[0-9]{2}"
+                                                            title="Duration in minutes:seconds (e.g. 03:45)"
+                                                            className={styles.intermissionDurationInput}
                                                         />
                                                         <button
                                                             type="button"
@@ -784,13 +796,14 @@ const AddEventForm = () => {
                                                             <div className={styles.durationInput}>
                                                                 <label>Duration</label>
                                                                 <input
-                                                                    type="time"
+                                                                    type="text"
                                                                     name="duration"
                                                                     value={program.duration}
                                                                     onChange={e => handleProgramChange(index, e)}
                                                                     required
-                                                                    placeholder="hh:mm"
-                                                                    title="Hours:Minutes"
+                                                                    placeholder="mm:ss"
+                                                                    pattern="[0-9]{2}:[0-9]{2}"
+                                                                    title="Duration in minutes:seconds (e.g. 03:45)"
                                                                 />
                                                             </div>
                                                             <button
