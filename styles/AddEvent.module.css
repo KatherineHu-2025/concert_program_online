@@ -43,11 +43,11 @@
     font-weight: bold;
     font-style: italic;
     color: #DEDDED;
-    background: none; /* Make background transparent to match heading style */
-    border: none; /* Remove border for a heading-like appearance */
-    outline: none; /* Remove outline to avoid a focus border */
+    background: none;
+    border: none;
+    outline: none;
     margin-bottom: 1.5rem;
-    width: 60%; /* Full width to center the text */
+    width: 60%;
 }
 
 .editableHeadingInput::placeholder {

@@ -346,7 +346,7 @@ const AddEventForm = () => {
             }
     
             // Reset form fields after successful submission
-            setHeading("Input your title here...");
+            setHeading("");
             setEventDate('');
             setLocation('');
             setConcertType('');
@@ -490,18 +490,6 @@ const AddEventForm = () => {
         setIsEditingHeading(!isEditingHeading);
     };
 
-    // Function to handle heading change
-    const handleHeadingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setHeading(e.target.value);
-    };
-
-    // Function to save heading on blur or Enter key
-    const handleHeadingBlurOrEnter = (e: React.FocusEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.type === 'blur' || (e.type === 'keydown' && (e as React.KeyboardEvent).key === 'Enter')) {
-            setIsEditingHeading(false);
-        }
-    };
-
     // Add a handler for color changes
     const handleColorChange = (newColor: string) => {
         setColor(newColor);
@@ -526,16 +514,19 @@ const AddEventForm = () => {
                             <input
                                 type="text"
                                 value={heading}
-                                onChange={handleHeadingChange}
-                                onBlur={handleHeadingBlurOrEnter}
-                                onKeyDown={handleHeadingBlurOrEnter}
+                                onChange={(e) => setHeading(e.target.value)}
+                                onBlur={() => setIsEditingHeading(false)}
                                 placeholder="Input your title here..."
                                 autoFocus
                                 className={styles.editableHeadingInput}
                             />
                         ) : (
-                            <h2 className={styles.heading} onClick={toggleEditHeading}>
-                                {heading || "Input your title here..."}
+                            <h2 
+                                className={styles.heading} 
+                                onClick={toggleEditHeading}
+                                data-empty={!heading}
+                            >
+                                {heading}
                             </h2>
                         )}
                         <span className={styles.asterisk}>*</span>
