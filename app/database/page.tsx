@@ -8,6 +8,7 @@ import { db, auth } from '../../firebaseConfig';
 import Image from 'next/image';
 import Papa from 'papaparse';
 
+
 interface TableProps {
   headers: string[];
   data: string[][];
@@ -36,6 +37,20 @@ interface Program {
   piece: string;
   year?: string;
 }
+
+interface CsvPerformerRow {
+  name: string;
+  role?: string;
+  bio?: string;
+}
+
+interface CsvGroupRow {
+  name: string;
+  bio?: string;
+  location?: string;
+}
+
+type CsvRow = CsvPerformerRow | CsvGroupRow;
 
 const Table: React.FC<TableProps> = ({ headers, data }) => (
   <div className={styles.tableContainer}>
@@ -82,7 +97,7 @@ const DatabasePage: React.FC = () => {
 
   // CSV upload states
   const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [csvPreview, setCsvPreview] = useState<any[]>([]);
+  const [csvPreview, setCsvPreview] = useState<CsvRow[]>([]);
   const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
   const [csvUploadType, setCsvUploadType] = useState<'performers' | 'groups' | null>(null);
   const [csvUploadError, setCsvUploadError] = useState<string | null>(null);
@@ -296,9 +311,9 @@ const DatabasePage: React.FC = () => {
     setCsvUploadError(null);
     
     // Parse CSV for preview
-    Papa.parse<any>(file, {
+    Papa.parse<CsvRow>(file, {
       header: true,
-      complete: (results: Papa.ParseResult<any>) => {
+      complete: (results: Papa.ParseResult<CsvRow>) => {
         setCsvHeaders(results.meta.fields || []);
         setCsvPreview(results.data.slice(0, 5)); // Show first 5 rows as preview
       },
@@ -318,10 +333,10 @@ const DatabasePage: React.FC = () => {
     setUploadFailed(0);
     
     try {
-      const results = await new Promise<any[]>((resolve, reject) => {
-        Papa.parse<any>(csvFile, {
+      const results = await new Promise<CsvRow[]>((resolve, reject) => {
+        Papa.parse<CsvRow>(csvFile, {
           header: true,
-          complete: (results: Papa.ParseResult<any>) => resolve(results.data),
+          complete: (results: Papa.ParseResult<CsvRow>) => resolve(results.data),
           error: (error: Error) => reject(error)
         });
       });
@@ -342,30 +357,32 @@ const DatabasePage: React.FC = () => {
         
         try {
           if (csvUploadType === 'performers') {
+            const performerRow = row as CsvPerformerRow;
             // Validate required fields
-            if (!row.name) {
+            if (!performerRow.name) {
               failedCount++;
               continue;
             }
             
             await addDoc(collection(db, 'performers'), {
-              name: row.name,
-              role: row.role || '',
-              bio: row.bio || '',
+              name: performerRow.name,
+              role: performerRow.role || '',
+              bio: performerRow.bio || '',
               createdBy: user.uid,
               createdAt: new Date()
             });
           } else if (csvUploadType === 'groups') {
+            const groupRow = row as CsvGroupRow;
             // Validate required fields
-            if (!row.name) {
+            if (!groupRow.name) {
               failedCount++;
               continue;
             }
             
             await addDoc(collection(db, 'performanceGroups'), {
-              name: row.name,
-              bio: row.bio || '',
-              location: row.location || '',
+              name: groupRow.name,
+              bio: groupRow.bio || '',
+              location: groupRow.location || '',
               createdBy: user.uid,
               createdAt: new Date()
             });
@@ -720,7 +737,7 @@ const DatabasePage: React.FC = () => {
                       <div key={rowIndex} className={styles.csvRow}>
                         {csvHeaders.map((header, colIndex) => (
                           <div key={colIndex} className={styles.csvCell}>
-                            {row[header] || ''}
+                            {row[header as keyof CsvRow] || ''}
                           </div>
                         ))}
                       </div>
@@ -746,15 +763,15 @@ const DatabasePage: React.FC = () => {
                 <h3>CSV Format Instructions</h3>
                 {csvUploadType === 'performers' ? (
                   <ul>
-                    <li><strong>name</strong> (required): Performer's full name</li>
-                    <li><strong>role</strong> (optional): Performer's role (e.g., "Violinist", "Pianist")</li>
-                    <li><strong>bio</strong> (optional): Performer's biography</li>
+                    <li><strong>name</strong> (required): Performer&apos;s full name</li>
+                    <li><strong>role</strong> (optional): Performer&apos;s role (e.g., &quot;Violinist&quot;, &quot;Pianist&quot;)</li>
+                    <li><strong>bio</strong> (optional): Performer&apos;s biography</li>
                   </ul>
                 ) : (
                   <ul>
-                    <li><strong>name</strong> (required): Performance group's name</li>
-                    <li><strong>location</strong> (optional): Group's location</li>
-                    <li><strong>bio</strong> (optional): Group's biography</li>
+                    <li><strong>name</strong> (required): Performance group&apos;s name</li>
+                    <li><strong>location</strong> (optional): Group&apos;s location</li>
+                    <li><strong>bio</strong> (optional): Group&apos;s biography</li>
                   </ul>
                 )}
               </div>
