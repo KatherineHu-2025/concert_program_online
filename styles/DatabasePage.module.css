@@ -63,16 +63,31 @@
 }
 
 .moreButton {
-  background-color: #f0e6e0;
+  background: none;
   border: none;
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
+  color: #333;
+}
+
+.addButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: transform 0.2s;
+}
+
+.addButton:hover {
+  transform: scale(1.1);
 }
 
 .tableContainer {
-  flex: 1;
   overflow-y: auto;
+  flex-grow: 1;
   margin-top: 1rem;
 }
 
@@ -118,4 +133,274 @@
 
 .tableContainer::-webkit-scrollbar-thumb:hover {
   background: #ccc;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalActions button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.modalActions button:first-child {
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.saveButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.saveButton:hover {
+  background-color: #45a049;
+}
+
+/* CSV Upload Styles */
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.uploadButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: transform 0.2s;
+}
+
+.uploadButton:hover {
+  transform: scale(1.1);
+}
+
+.csvUploadContainer {
+  margin: 20px 0;
+}
+
+.csvFileInfo {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.csvFileInfo p {
+  margin: 5px 0;
+}
+
+.errorMessage {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.csvPreview {
+  margin: 15px 0;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.csvPreview h3 {
+  margin: 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+
+.csvHeaders {
+  display: flex;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eee;
+}
+
+.csvHeader {
+  flex: 1;
+  padding: 8px 10px;
+  font-weight: 500;
+  border-right: 1px solid #eee;
+}
+
+.csvHeader:last-child {
+  border-right: none;
+}
+
+.csvRows {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.csvRow {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.csvRow:last-child {
+  border-bottom: none;
+}
+
+.csvCell {
+  flex: 1;
+  padding: 8px 10px;
+  border-right: 1px solid #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.csvCell:last-child {
+  border-right: none;
+}
+
+.uploadProgress {
+  margin: 15px 0;
+}
+
+.progressBar {
+  height: 8px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.uploadProgress p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.csvInstructions {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.csvInstructions h3 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.csvInstructions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.csvInstructions li {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments for CSV upload */
+@media (max-width: 768px) {
+  .csvPreview {
+    overflow-x: auto;
+  }
+  
+  .csvHeaders, .csvRow {
+    min-width: 500px;
+  }
 } 
