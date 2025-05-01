@@ -106,6 +106,10 @@ const DatabasePage: React.FC = () => {
   const [uploadSuccess, setUploadSuccess] = useState<number>(0);
   const [uploadFailed, setUploadFailed] = useState<number>(0);
 
+  // Add separate file input refs
+  const performerFileInputRef = React.useRef<HTMLInputElement>(null);
+  const groupFileInputRef = React.useRef<HTMLInputElement>(null);
+
   // Fetch all data on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -298,6 +302,17 @@ const DatabasePage: React.FC = () => {
 
   // Handle CSV file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: 'performers' | 'groups') => {
+    // Reset all states first
+    setCsvFile(null);
+    setCsvPreview([]);
+    setCsvHeaders([]);
+    setCsvUploadType(null);
+    setCsvUploadError(null);
+    setIsUploading(false);
+    setUploadProgress(0);
+    setUploadSuccess(0);
+    setUploadFailed(0);
+    
     const file = e.target.files?.[0];
     if (!file) return;
     
@@ -336,7 +351,11 @@ const DatabasePage: React.FC = () => {
       const results = await new Promise<CsvRow[]>((resolve, reject) => {
         Papa.parse<CsvRow>(csvFile, {
           header: true,
-          complete: (results: Papa.ParseResult<CsvRow>) => resolve(results.data),
+          skipEmptyLines: true, // Skip empty lines
+          complete: (results: Papa.ParseResult<CsvRow>) => {
+            console.log('Parsed CSV data:', results.data); // Debug log
+            resolve(results.data);
+          },
           error: (error: Error) => reject(error)
         });
       });
@@ -352,14 +371,14 @@ const DatabasePage: React.FC = () => {
       for (let i = 0; i < results.length; i++) {
         const row = results[i];
         
-        // Skip empty rows
-        if (Object.values(row).every(val => !val)) continue;
-        
         try {
+          console.log('Processing row:', row); // Debug log
+          
           if (csvUploadType === 'performers') {
             const performerRow = row as CsvPerformerRow;
             // Validate required fields
             if (!performerRow.name) {
+              console.log('Skipping row - missing name:', performerRow); // Debug log
               failedCount++;
               continue;
             }
@@ -371,10 +390,12 @@ const DatabasePage: React.FC = () => {
               createdBy: user.uid,
               createdAt: new Date()
             });
+            console.log('Successfully added performer:', performerRow.name); // Debug log
           } else if (csvUploadType === 'groups') {
             const groupRow = row as CsvGroupRow;
             // Validate required fields
             if (!groupRow.name) {
+              console.log('Skipping row - missing name:', groupRow); // Debug log
               failedCount++;
               continue;
             }
@@ -386,11 +407,12 @@ const DatabasePage: React.FC = () => {
               createdBy: user.uid,
               createdAt: new Date()
             });
+            console.log('Successfully added group:', groupRow.name); // Debug log
           }
           
           successCount++;
         } catch (error) {
-          console.error(`Error adding row ${i}:`, error);
+          console.error(`Error adding row ${i}:`, error, 'Row data:', row);
           failedCount++;
         }
         
@@ -447,12 +469,24 @@ const DatabasePage: React.FC = () => {
       setCsvPreview([]);
       setCsvHeaders([]);
       setCsvUploadType(null);
+      setCsvUploadError(null);
+      setIsUploading(false);
+      setUploadProgress(0);
+      setUploadSuccess(0);
+      setUploadFailed(0);
+      
+      // Reset both file inputs
+      if (performerFileInputRef.current) {
+        performerFileInputRef.current.value = '';
+      }
+      if (groupFileInputRef.current) {
+        groupFileInputRef.current.value = '';
+      }
       
       alert(`Upload complete! ${successCount} entries added successfully, ${failedCount} failed.`);
     } catch (error) {
       console.error('Error uploading CSV:', error);
       setCsvUploadError(`Error uploading CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
       setIsUploading(false);
     }
   };
@@ -468,6 +502,14 @@ const DatabasePage: React.FC = () => {
     setUploadProgress(0);
     setUploadSuccess(0);
     setUploadFailed(0);
+    
+    // Reset both file inputs
+    if (performerFileInputRef.current) {
+      performerFileInputRef.current.value = '';
+    }
+    if (groupFileInputRef.current) {
+      groupFileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -493,10 +535,12 @@ const DatabasePage: React.FC = () => {
                   </button>
                   <label className={styles.uploadButton}>
                     <input
+                      ref={performerFileInputRef}
                       type="file"
                       accept=".csv"
                       onChange={(e) => handleFileSelect(e, 'performers')}
                       style={{ display: 'none' }}
+                      key={`performer-upload-${csvFile ? 'active' : 'reset'}`}
                     />
                     <Image src="/upload.svg" alt="Upload CSV" width={20} height={20} />
                   </label>
@@ -526,10 +570,12 @@ const DatabasePage: React.FC = () => {
                   </button>
                   <label className={styles.uploadButton}>
                     <input
+                      ref={groupFileInputRef}
                       type="file"
                       accept=".csv"
                       onChange={(e) => handleFileSelect(e, 'groups')}
                       style={{ display: 'none' }}
+                      key={`group-upload-${csvFile ? 'active' : 'reset'}`}
                     />
                     <Image src="/upload.svg" alt="Upload CSV" width={20} height={20} />
                   </label>
