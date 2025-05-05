@@ -1,3 +1,19 @@
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  const originalConsoleError = console.error;
+  console.error = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      (
+        args[0].includes("Warning: Hydration failed") ||
+        args[0].includes("Hydration failed")
+      )
+    ) {
+      return;
+    }
+    originalConsoleError(...args);
+  };
+}
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
