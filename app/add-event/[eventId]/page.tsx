@@ -429,13 +429,21 @@ const AddEventForm = () => {
     // Function to calculate total duration
     const calculateTotalDuration = (items: ProgramItem[]) => {
         let totalSeconds = 0;
+        let valid = true;
         items.forEach(item => {
             if (item.duration) {
-                const [minutes, seconds] = item.duration.split(':').map(Number);
-                totalSeconds += (minutes * 60) + seconds;
+                const parts = item.duration.split(":");
+                if (parts.length !== 2 || isNaN(Number(parts[0])) || isNaN(Number(parts[1]))) {
+                    valid = false;
+                } else {
+                    const [minutes, seconds] = parts.map(Number);
+                    totalSeconds += (minutes * 60) + seconds;
+                }
             }
         });
-        
+        if (!valid || isNaN(totalSeconds)) {
+            return "--:--";
+        }
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
