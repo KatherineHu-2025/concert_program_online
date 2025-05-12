@@ -453,20 +453,33 @@
 }
 
 .intermissionBanner {
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: #FDFBF4;
     color: #3B3C50;
     font-weight: bold;
     font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 8px;
     margin: 0.5rem 0;
     padding: 1.5rem 0;
     box-shadow: 0 2px 4px rgba(59, 60, 80, 0.05);
     gap: 2rem;
     position: relative;
+}
+
+.intermissionCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 1.5rem;
+}
+
+.intermissionTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3B3C50;
 }
 
 .intermissionDurationInput {
@@ -478,8 +491,34 @@
     border-radius: 5px;
     background: #DEDDED !important;
     margin-left: 1rem;
-    padding: 4px;
-    color: #3B3C50;
+}
+
+.intermissionActions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-right: 1.5rem;
+}
+
+.darkActionButton {
+    background: #3B3C50;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.darkActionButton:hover {
+    background: #23233a;
+}
+
+.darkActionButton img {
+    filter: none;
 }
 
 .deleteButton {

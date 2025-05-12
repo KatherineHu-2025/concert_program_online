@@ -32,6 +32,14 @@ const AddEventForm = () => {
         notes: '',
         duration: '',
         isIntermission: false,
+      },
+      {
+        id: 'intermission-1',
+        composer: '',
+        piece: 'Intermission',
+        notes: '',
+        duration: '15:00',
+        isIntermission: true,
       }];
 
     // Add a ref to keep track of the next program ID
@@ -91,15 +99,25 @@ const AddEventForm = () => {
                             setPrograms(programsWithIds);
                             nextProgramId.current = programsWithIds.length + 1;
                         } else {
-                            setPrograms([{ 
-                                id: 'program-1',
-                                composer: '', 
-                                piece: '', 
-                                notes: '', 
-                                duration: '',
-                                isIntermission: false 
-                            }]);
-                            nextProgramId.current = 2;
+                            setPrograms([
+                                { 
+                                    id: 'program-1',
+                                    composer: '', 
+                                    piece: '', 
+                                    notes: '', 
+                                    duration: '',
+                                    isIntermission: false 
+                                },
+                                {
+                                    id: 'intermission-1',
+                                    composer: '',
+                                    piece: 'Intermission',
+                                    notes: '',
+                                    duration: '15:00',
+                                    isIntermission: true,
+                                }
+                            ]);
+                            nextProgramId.current = 3;
                         }
 
                         // Set other form data
@@ -713,18 +731,6 @@ const AddEventForm = () => {
                                         height={24}
                                     />
                                 </button>
-                                <button 
-                                    className={styles.actionButton}
-                                    onClick={handleAddIntermission}
-                                    type="button"
-                                >
-                                    <Image 
-                                        src="/clock.svg" 
-                                        alt="Add Intermission" 
-                                        width={24} 
-                                        height={24}
-                                    />
-                                </button>
                             </div>
                         </div>
                         
@@ -755,26 +761,43 @@ const AddEventForm = () => {
                                                         {...provided.dragHandleProps}
                                                         className={styles.intermissionBanner}
                                                     >
-                                                        <span>Intermission</span>
-                                                        <input
-                                                            type="text"
-                                                            name="duration"
-                                                            value={program.duration}
-                                                            onChange={e => handleProgramChange(index, e)}
-                                                            required
-                                                            placeholder="mm:ss"
-                                                            pattern="[0-9]{2}:[0-9]{2}"
-                                                            title="Duration in minutes:seconds (e.g. 03:45)"
-                                                            className={styles.intermissionDurationInput}
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            className={styles.deleteButton}
-                                                            onClick={() => handleDeleteProgram(index)}
-                                                            aria-label="Delete Intermission"
-                                                        >
-                                                            <Image src="/close.svg" alt="Delete" width={20} height={20} />
-                                                        </button>
+                                                        <div className={styles.intermissionCenter}>
+                                                            <span className={styles.intermissionTitle}>Intermission</span>
+                                                            <input
+                                                                type="text"
+                                                                name="duration"
+                                                                value={program.duration ?? ''}
+                                                                onChange={e => handleProgramChange(index, e)}
+                                                                required
+                                                                placeholder="mm:ss"
+                                                                pattern="[0-9]{2}:[0-9]{2}"
+                                                                title="Duration in minutes:seconds (e.g. 03:45)"
+                                                                className={styles.intermissionDurationInput}
+                                                            />
+                                                        </div>
+                                                        <div className={styles.intermissionActions}>
+                                                            <button
+                                                                type="button"
+                                                                className={styles.actionButton}
+                                                                onClick={handleAddIntermission}
+                                                                title="Add another intermission"
+                                                            >
+                                                                <Image 
+                                                                    src="/darker_plus.svg" 
+                                                                    alt="Add Intermission" 
+                                                                    width={24} 
+                                                                    height={24}
+                                                                />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className={styles.deleteButton}
+                                                                onClick={() => handleDeleteProgram(index)}
+                                                                aria-label="Delete Intermission"
+                                                            >
+                                                                <Image src="/close.svg" alt="Delete" width={20} height={20} />
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 ) : (
                                                     <div
@@ -797,7 +820,7 @@ const AddEventForm = () => {
                                                                 <input
                                                                     type="text"
                                                                     name="duration"
-                                                                    value={program.duration}
+                                                                    value={program.duration ?? ''}
                                                                     onChange={e => handleProgramChange(index, e)}
                                                                     required
                                                                     placeholder="mm:ss"
